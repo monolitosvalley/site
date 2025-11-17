@@ -1,16 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { uploadImage } from '@/lib/supabase/storage'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 export function BlogPostForm({ onSuccess }: { onSuccess: () => void }) {
     const [loading, setLoading] = useState(false)
+    const [uploading, setUploading] = useState(false)
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
@@ -18,7 +20,25 @@ export function BlogPostForm({ onSuccess }: { onSuccess: () => void }) {
         excerpt: '',
         image_url: '',
     })
+    const fileInputRef = useRef<HTMLInputElement>(null)
     const supabase = createClient()
+
+    async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setUploading(true)
+        try {
+            const url = await uploadImage(file, 'blog', 'images')
+            setFormData({ ...formData, image_url: url })
+            toast.success('Imagem enviada com sucesso!')
+        } catch (error) {
+            toast.error('Erro ao enviar imagem')
+            console.error(error)
+        } finally {
+            setUploading(false)
+        }
+    }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -84,12 +104,46 @@ export function BlogPostForm({ onSuccess }: { onSuccess: () => void }) {
                         required
                         rows={6}
                     />
-                    <Input
-                        placeholder="URL da imagem de capa"
-                        value={formData.image_url}
-                        onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    />
-                    <Button type="submit" disabled={loading} className="w-full">
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Imagem de capa</label>
+                        <div className="flex gap-2">
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                disabled={uploading}
+                                className="hidden"
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={uploading}
+                            >
+                                <Upload className="h-4 w-4 mr-2" />
+                                {uploading ? 'Enviando...' : 'Selecionar imagem'}
+                            </Button>
+                            {formData.image_url && (
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setFormData({ ...formData, image_url: '' })}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            )}
+                        </div>
+                        {formData.image_url && (
+                            <p className="text-xs text-muted-foreground truncate">
+                                ✓ Imagem selecionada
+                            </p>
+                        )}
+                    </div>
+
+                    <Button type="submit" disabled={loading || uploading} className="w-full">
                         {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                         Criar Post
                     </Button>

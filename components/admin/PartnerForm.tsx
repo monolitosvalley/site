@@ -1,24 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { uploadImage } from '@/lib/supabase/storage'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 export function PartnerForm({ onSuccess }: { onSuccess: () => void }) {
     const [loading, setLoading] = useState(false)
+    const [uploading, setUploading] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         website: '',
-        logo_url: '',
+        image_url: '',
         category: '',
     })
+    const fileInputRef = useRef<HTMLInputElement>(null)
     const supabase = createClient()
+
+    async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setUploading(true)
+        try {
+            const url = await uploadImage(file, 'partners', 'logos')
+            setFormData({ ...formData, image_url: url })
+            toast.success('Logo enviado com sucesso!')
+        } catch (error) {
+            toast.error('Erro ao enviar logo')
+            console.error(error)
+        } finally {
+            setUploading(false)
+        }
+    }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -32,16 +52,15 @@ export function PartnerForm({ onSuccess }: { onSuccess: () => void }) {
                 name: formData.name,
                 description: formData.description,
                 website: formData.website,
-                logo_url: formData.logo_url,
+                image_url: formData.image_url,
                 category: formData.category,
                 approved: false,
-                created_by: user.id,
             })
 
             if (error) throw error
 
             toast.success('Parceiro criado com sucesso!')
-            setFormData({ name: '', description: '', website: '', logo_url: '', category: '' })
+            setFormData({ name: '', description: '', website: '', image_url: '', category: '' })
             onSuccess()
         } catch (error) {
             toast.error('Erro ao criar parceiro')
@@ -84,12 +103,46 @@ export function PartnerForm({ onSuccess }: { onSuccess: () => void }) {
                         value={formData.website}
                         onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                     />
-                    <Input
-                        placeholder="URL do logo"
-                        value={formData.logo_url}
-                        onChange={(e) => setFormData({ ...formData, logo_url: e.target.value })}
-                    />
-                    <Button type="submit" disabled={loading} className="w-full">
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Logo do parceiro</label>
+                        <div className="flex gap-2">
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                disabled={uploading}
+                                className="hidden"
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={uploading}
+                            >
+                                <Upload className="h-4 w-4 mr-2" />
+                                {uploading ? 'Enviando...' : 'Selecionar logo'}
+                            </Button>
+                            {formData.image_url && (
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setFormData({ ...formData, image_url: '' })}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            )}
+                        </div>
+                        {formData.image_url && (
+                            <p className="text-xs text-muted-foreground truncate">
+                                ✓ Logo selecionado
+                            </p>
+                        )}
+                    </div>
+
+                    <Button type="submit" disabled={loading || uploading} className="w-full">
                         {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                         Criar Parceiro
                     </Button>
