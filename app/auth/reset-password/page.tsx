@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
                     text: 'Sessão inválida. Por favor, solicite um novo link de recuperação.'
                 })
                 setTimeout(() => {
-                    router.push('/forgot-password')
+                    router.push('/auth/forgot-password')
                 }, 3000)
             }
             setChecking(false)

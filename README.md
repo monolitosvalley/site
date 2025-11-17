@@ -159,9 +159,9 @@ O projeto suporta dois métodos de autenticação:
 
 ### Fluxos de autenticação:
 
-- **Login**: `/login` → autenticação → `/profile`
-- **Magic Link**: `/login` → email → `/auth/callback` → `/profile`
-- **Recuperação de senha**: `/forgot-password` → email → `/reset-password` → `/profile`
+- **Login**: `/auth/login` → autenticação → `/profile`
+- **Magic Link**: `/auth/login` → email → `/auth/callback` → `/profile`
+- **Recuperação de senha**: `/auth/forgot-password` → email → `/auth/reset-password` → `/profile`
 
 ## 👤 Área do Usuário
 

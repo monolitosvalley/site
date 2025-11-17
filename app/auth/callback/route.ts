@@ -28,6 +28,6 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.redirect(
-    new URL("/login?error=authentication_failed", requestUrl.origin)
+    new URL("/auth/login?error=authentication_failed", requestUrl.origin)
   )
 }
