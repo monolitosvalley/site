@@ -18,14 +18,11 @@ import { Loader2, Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 const OPPORTUNITY_TYPES = [
-  'Vaga',
-  'Investimento',
-  'Mentoria',
-  'Edital',
-  'Parceria',
-  'Bolsa',
-  'Consultoria',
-  'Capacitação',
+  { value: 'investidor', label: 'Investidores' },
+  { value: 'edital', label: 'Editais' },
+  { value: 'inovacao_aberta', label: 'Inovação Aberta' },
+  { value: 'beneficio', label: 'Benefícios' },
+  { value: 'vaga', label: 'Vagas' },
 ]
 
 export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
@@ -128,8 +125,8 @@ export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
             </SelectTrigger>
             <SelectContent>
               {OPPORTUNITY_TYPES.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {type}
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
                 </SelectItem>
               ))}
             </SelectContent>
