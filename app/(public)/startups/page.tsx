@@ -5,7 +5,14 @@ import { Startup } from '@/types/database'
 import { StartupGrid } from '@/components/features/startups/StartupGrid'
 import { StartupFilters, StartupFilters as Filters } from '@/components/features/startups/StartupFilters'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ChevronLeft, ChevronRight, Grid3x3, Map } from 'lucide-react'
+import dynamic from 'next/dynamic'
+
+const StartupMap = dynamic(
+    () => import('@/components/features/startups/StartupMap').then((mod) => ({ default: mod.StartupMap })),
+    { ssr: false, loading: () => <div className="h-[600px] bg-muted animate-pulse rounded-lg" /> }
+)
 
 export default function StartupsPage() {
     const [startups, setStartups] = useState<Startup[]>([])
@@ -63,7 +70,26 @@ export default function StartupsPage() {
                 </aside>
 
                 <main className="lg:col-span-3">
-                    <StartupGrid startups={startups} loading={loading} />
+                    <Tabs defaultValue="grid" className="w-full">
+                        <TabsList className="mb-6">
+                            <TabsTrigger value="grid" className="flex items-center gap-2">
+                                <Grid3x3 className="h-4 w-4" />
+                                Grade
+                            </TabsTrigger>
+                            <TabsTrigger value="map" className="flex items-center gap-2">
+                                <Map className="h-4 w-4" />
+                                Mapa
+                            </TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="grid">
+                            <StartupGrid startups={startups} loading={loading} />
+                        </TabsContent>
+
+                        <TabsContent value="map">
+                            <StartupMap startups={startups} />
+                        </TabsContent>
+                    </Tabs>
 
                     {/* Pagination */}
                     {totalPages > 1 && !loading && (

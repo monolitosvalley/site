@@ -9,11 +9,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useForm, Controller } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { startupSchema, StartupUpdate } from '@/lib/validations/startup'
 import { Loader2, Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
+
+const LocationPicker = dynamic(
+    () => import('./LocationPicker').then((mod) => ({ default: mod.LocationPicker })),
+    { ssr: false, loading: () => <div className="h-[200px] bg-muted animate-pulse rounded-lg" /> }
+)
 
 interface StartupFormProps {
     startup?: Startup | null
@@ -31,7 +35,12 @@ const SEGMENTOS = [
     'Outro',
 ]
 
-const ESTAGIOS = ['Ideação', 'Validação', 'Operação', 'Tração', 'Scale-up'] as const
+const ESTAGIOS = [
+    { value: 'ideia', label: 'Ideação' },
+    { value: 'mvp', label: 'MVP' },
+    { value: 'tracao', label: 'Tração' },
+    { value: 'escala', label: 'Scale-up' },
+] as const
 
 export function StartupForm({ startup, onSuccess }: StartupFormProps) {
     const [loading, setLoading] = useState(false)
@@ -39,10 +48,12 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
     const [uploadingPitch, setUploadingPitch] = useState(false)
     const [logoUrl, setLogoUrl] = useState(startup?.logo_url || '')
     const [pitchDeckUrl, setPitchDeckUrl] = useState(startup?.pitch_deck_url || '')
-    const [technologies, setTechnologies] = useState<string[]>(startup?.tecnologias_utilizadas || [])
-    const [links, setLinks] = useState<string[]>(startup?.links_premios_noticias || [])
+    const [technologies, setTechnologies] = useState<string[]>(startup?.tecnologias || [])
     const [newTech, setNewTech] = useState('')
-    const [newLink, setNewLink] = useState('')
+    const [latitude, setLatitude] = useState<number | undefined>(startup?.latitude || undefined)
+    const [longitude, setLongitude] = useState<number | undefined>(startup?.longitude || undefined)
+    const [cidade, setCidade] = useState(startup?.cidade || '')
+    const [estado, setEstado] = useState(startup?.estado || '')
 
     const {
         register,
@@ -54,17 +65,15 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
             name: startup?.name || '',
             description: startup?.description || '',
             segmento: startup?.segmento || '',
-            modelo_monetizacao: startup?.modelo_monetizacao || '',
-            problema_abordado: startup?.problema_abordado || '',
-            solucao_oferecida: startup?.solucao_oferecida || '',
             estagio_maturidade: startup?.estagio_maturidade || undefined,
-            programas_previos: startup?.programas_previos || '',
-            publico_atende: startup?.publico_atende || '',
-            is_esg: startup?.is_esg || false,
-            latitude: startup?.latitude || undefined,
-            longitude: startup?.longitude || undefined,
-            tecnologias_utilizadas: [],
-            links_premios_noticias: [],
+            ano_fundacao: startup?.ano_fundacao || new Date().getFullYear(),
+            website: startup?.website || '',
+            linkedin: startup?.linkedin || '',
+            instagram: startup?.instagram || '',
+            cidade: startup?.cidade || '',
+            estado: startup?.estado || '',
+            tem_esg: startup?.tem_esg || false,
+            detalhes_esg: startup?.detalhes_esg || '',
         },
     })
 
@@ -165,31 +174,20 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
         setTechnologies(technologies.filter((t) => t !== tech))
     }
 
-    const addLink = () => {
-        if (newLink.trim() && !links.includes(newLink.trim())) {
-            try {
-                new URL(newLink.trim())
-                setLinks([...links, newLink.trim()])
-                setNewLink('')
-            } catch {
-                toast.error('URL inválida')
-            }
-        }
-    }
 
-    const removeLink = (link: string) => {
-        setLinks(links.filter((l) => l !== link))
-    }
 
-    const onSubmit = async (data: StartupUpdate) => {
+    const onSubmit = async (data: any) => {
         setLoading(true)
         try {
             const startupData = {
                 ...data,
                 logo_url: logoUrl || null,
                 pitch_deck_url: pitchDeckUrl || null,
-                tecnologias_utilizadas: technologies,
-                links_premios_noticias: links,
+                tecnologias: technologies,
+                latitude: latitude || null,
+                longitude: longitude || null,
+                cidade: cidade || data.cidade,
+                estado: estado || data.estado,
             }
 
             const res = await fetch('/api/profile', {
@@ -296,8 +294,8 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
                             </SelectTrigger>
                             <SelectContent>
                                 {ESTAGIOS.map((est) => (
-                                    <SelectItem key={est} value={est}>
-                                        {est}
+                                    <SelectItem key={est.value} value={est.value}>
+                                        {est.label}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -367,33 +365,7 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
                 </div>
             </div>
 
-            {/* Links */}
-            <div className="space-y-2">
-                <Label>Links de Prêmios/Notícias</Label>
-                <div className="flex gap-2">
-                    <Input
-                        value={newLink}
-                        onChange={(e) => setNewLink(e.target.value)}
-                        placeholder="https://..."
-                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addLink())}
-                    />
-                    <Button type="button" onClick={addLink} variant="outline">
-                        Adicionar
-                    </Button>
-                </div>
-                <div className="space-y-2 mt-2">
-                    {links.map((link) => (
-                        <div key={link} className="bg-secondary px-3 py-2 rounded flex items-center justify-between">
-                            <a href={link} target="_blank" rel="noopener noreferrer" className="text-sm truncate flex-1">
-                                {link}
-                            </a>
-                            <button type="button" onClick={() => removeLink(link)}>
-                                <X className="w-4 h-4" />
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
+
 
             {/* Pitch Deck */}
             <div className="space-y-2">
@@ -448,29 +420,82 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
                 </Label>
             </div>
 
-            {/* Localização */}
+            {/* Ano de Fundação */}
+            <div className="space-y-2">
+                <Label htmlFor="ano_fundacao">Ano de Fundação *</Label>
+                <Input
+                    id="ano_fundacao"
+                    type="number"
+                    min="1900"
+                    max={new Date().getFullYear()}
+                    {...register('ano_fundacao', { valueAsNumber: true })}
+                />
+            </div>
+
+            {/* Website */}
+            <div className="space-y-2">
+                <Label htmlFor="website">Website</Label>
+                <Input id="website" type="url" placeholder="https://..." {...register('website')} />
+            </div>
+
+            {/* LinkedIn */}
+            <div className="space-y-2">
+                <Label htmlFor="linkedin">LinkedIn</Label>
+                <Input id="linkedin" type="url" placeholder="https://linkedin.com/..." {...register('linkedin')} />
+            </div>
+
+            {/* Instagram */}
+            <div className="space-y-2">
+                <Label htmlFor="instagram">Instagram</Label>
+                <Input id="instagram" type="url" placeholder="https://instagram.com/..." {...register('instagram')} />
+            </div>
+
+            {/* Cidade e Estado */}
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="latitude">Latitude</Label>
+                    <Label htmlFor="cidade">Cidade *</Label>
                     <Input
-                        id="latitude"
-                        type="number"
-                        step="any"
-                        {...register('latitude', { valueAsNumber: true })}
+                        id="cidade"
+                        {...register('cidade')}
+                        value={cidade}
+                        onChange={(e) => setCidade(e.target.value)}
                     />
-                    {errors.latitude && <p className="text-sm text-destructive">{String(errors.latitude.message)}</p>}
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="longitude">Longitude</Label>
+                    <Label htmlFor="estado">Estado (UF) *</Label>
                     <Input
-                        id="longitude"
-                        type="number"
-                        step="any"
-                        {...register('longitude', { valueAsNumber: true })}
+                        id="estado"
+                        {...register('estado')}
+                        value={estado}
+                        onChange={(e) => setEstado(e.target.value.toUpperCase())}
+                        maxLength={2}
+                        placeholder="CE"
                     />
-                    {errors.longitude && <p className="text-sm text-destructive">{String(errors.longitude.message)}</p>}
                 </div>
             </div>
+
+            {/* Detalhes ESG */}
+            <div className="space-y-2">
+                <Label htmlFor="detalhes_esg">Detalhes ESG (opcional)</Label>
+                <Textarea
+                    id="detalhes_esg"
+                    {...register('detalhes_esg')}
+                    placeholder="Descreva as práticas ESG da sua startup..."
+                    rows={3}
+                />
+            </div>
+
+            {/* Localização */}
+            <LocationPicker
+                initialLat={latitude}
+                initialLng={longitude}
+                cidade={cidade}
+                estado={estado}
+                onLocationSelect={(lat, lng) => {
+                    setLatitude(lat)
+                    setLongitude(lng)
+                }}
+            />
 
             <Button type="submit" disabled={loading} className="w-full">
                 {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
