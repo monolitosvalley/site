@@ -4,6 +4,7 @@ import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { AuthRedirect } from '@/components/auth/AuthRedirect'
+import { AuthHashHandler } from '@/components/auth/AuthHashHandler'
 import { createClient } from '@/lib/supabase/server'
 import { Toaster } from 'sonner'
 import { Suspense } from 'react'
@@ -39,6 +40,7 @@ export default async function RootLayout({
         <Suspense fallback={null}>
           <AuthRedirect />
         </Suspense>
+        <AuthHashHandler />
         <Toaster position="top-right" />
         <div className="flex min-h-screen flex-col">
           <Navbar user={user} />
