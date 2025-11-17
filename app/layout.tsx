@@ -4,6 +4,7 @@ import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { createClient } from '@/lib/supabase/server'
+import { Toaster } from 'sonner'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,6 +34,7 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Toaster position="top-right" />
         <div className="flex min-h-screen flex-col">
           <Navbar user={user} />
           <main className="flex-1">{children}</main>

@@ -77,3 +77,10 @@ Todas as tabelas têm RLS habilitado com políticas apropriadas:
 - **products**: Imagens de produtos (público, 5MB, imagens)
 
 Cada bucket tem políticas RLS apropriadas para controlar acesso.
+
+**IMPORTANTE**: Após executar as migrations, você precisa criar os buckets manualmente no Supabase Dashboard:
+
+1. Vá em Storage no Supabase Dashboard
+2. Crie cada bucket listado acima
+3. Configure como público ou privado conforme indicado
+4. As políticas RLS serão aplicadas automaticamente pela migration
