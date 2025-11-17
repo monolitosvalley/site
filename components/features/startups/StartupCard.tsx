@@ -1,15 +1,17 @@
 import { Startup } from '@/types/database'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Building2, Leaf } from 'lucide-react'
+import { Building2, Leaf, Eye } from 'lucide-react'
 import Image from 'next/image'
 
 interface StartupCardProps {
     startup: Startup
     variant?: 'compact' | 'detailed'
+    onViewDetails?: (startup: Startup) => void
 }
 
-export function StartupCard({ startup, variant = 'compact' }: StartupCardProps) {
+export function StartupCard({ startup, variant = 'compact', onViewDetails }: StartupCardProps) {
     return (
         <Card className="h-full hover:shadow-lg transition-shadow">
             <CardHeader>
@@ -49,7 +51,7 @@ export function StartupCard({ startup, variant = 'compact' }: StartupCardProps) 
                         {startup.description}
                     </p>
                 )}
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mb-4">
                     {startup.estagio_maturidade && (
                         <Badge variant="outline">{startup.estagio_maturidade}</Badge>
                     )}
@@ -66,6 +68,17 @@ export function StartupCard({ startup, variant = 'compact' }: StartupCardProps) 
                         </>
                     )}
                 </div>
+                {onViewDetails && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={() => onViewDetails(startup)}
+                    >
+                        <Eye className="h-4 w-4 mr-2" />
+                        Ver Detalhes
+                    </Button>
+                )}
             </CardContent>
         </Card>
     )
