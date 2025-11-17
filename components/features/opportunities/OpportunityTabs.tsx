@@ -13,11 +13,11 @@ interface OpportunityTabsProps {
 }
 
 const TABS: { value: OpportunityType; label: string; requiresAuth: boolean }[] = [
-    { value: 'Investidor', label: 'Investidores', requiresAuth: false },
-    { value: 'Edital', label: 'Editais', requiresAuth: false },
-    { value: 'InovacaoAberta', label: 'Inovação Aberta', requiresAuth: false },
-    { value: 'Beneficio', label: 'Benefícios', requiresAuth: false },
-    { value: 'Vaga', label: 'Vagas', requiresAuth: false },
+    { value: 'investimento', label: 'Investimento', requiresAuth: false },
+    { value: 'edital', label: 'Editais', requiresAuth: false },
+    { value: 'inovacao_aberta', label: 'Inovação Aberta', requiresAuth: false },
+    { value: 'beneficio', label: 'Benefícios', requiresAuth: false },
+    { value: 'vaga', label: 'Vagas', requiresAuth: false },
 ]
 
 export function OpportunityTabs({ opportunities, isAuthenticated }: OpportunityTabsProps) {
@@ -26,7 +26,7 @@ export function OpportunityTabs({ opportunities, isAuthenticated }: OpportunityT
     }
 
     return (
-        <Tabs defaultValue="Investidor" className="w-full">
+        <Tabs defaultValue="investidor" className="w-full">
             <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
                 {TABS.map((tab) => (
                     <TabsTrigger key={tab.value} value={tab.value} className="gap-2">

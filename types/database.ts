@@ -73,12 +73,11 @@ export interface BlogPost {
 }
 
 export type OpportunityType =
-  | "Investidor"
-  | "Edital"
-  | "InovacaoAberta"
-  | "Beneficio"
-  | "Talento"
-  | "Vaga"
+  | "investimento"
+  | "edital"
+  | "inovacao_aberta"
+  | "beneficio"
+  | "vaga"
 
 export interface Opportunity {
   id: string

@@ -18,7 +18,7 @@ import { Loader2, Upload, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 const OPPORTUNITY_TYPES = [
-  { value: 'investidor', label: 'Investidores' },
+  { value: 'investimento', label: 'Investimento' },
   { value: 'edital', label: 'Editais' },
   { value: 'inovacao_aberta', label: 'Inovação Aberta' },
   { value: 'beneficio', label: 'Benefícios' },
