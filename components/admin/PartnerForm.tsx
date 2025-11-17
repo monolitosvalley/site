@@ -35,6 +35,7 @@ export function PartnerForm({ onSuccess }: { onSuccess: () => void }) {
                 logo_url: formData.logo_url,
                 category: formData.category,
                 approved: false,
+                created_by: user.id,
             })
 
             if (error) throw error

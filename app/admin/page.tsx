@@ -82,16 +82,16 @@ export default function AdminPage() {
             supabase.from('blog_posts').select('id, title, created_at').eq('approved', false),
             supabase.from('events').select('id, title, created_at').eq('approved', false),
             supabase.from('opportunities').select('id, title, created_at').eq('approved', false),
-            supabase.from('partners').select('id, name as title, created_at').eq('approved', false),
-            supabase.from('store_products').select('id, name as title, created_at').eq('approved', false),
+            supabase.from('partners').select('id, name, created_at').eq('approved', false),
+            supabase.from('store_products').select('id, name, created_at').eq('approved', false),
         ])
 
         setPending({
-            blog: (blog.data || []).map((item: any) => ({ ...item, type: 'blog' })),
-            events: (events.data || []).map((item: any) => ({ ...item, type: 'event' })),
-            opportunities: (opportunities.data || []).map((item: any) => ({ ...item, type: 'opportunity' })),
-            partners: (partners.data || []).map((item: any) => ({ ...item, type: 'partner' })),
-            products: (products.data || []).map((item: any) => ({ ...item, type: 'product' })),
+            blog: (blog.data || []).map((item: any) => ({ ...item, title: item.title, type: 'blog' })),
+            events: (events.data || []).map((item: any) => ({ ...item, title: item.title, type: 'event' })),
+            opportunities: (opportunities.data || []).map((item: any) => ({ ...item, title: item.title, type: 'opportunity' })),
+            partners: (partners.data || []).map((item: any) => ({ ...item, title: item.name, type: 'partner' })),
+            products: (products.data || []).map((item: any) => ({ ...item, title: item.name, type: 'product' })),
         })
     }
 

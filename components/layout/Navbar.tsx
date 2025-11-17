@@ -46,6 +46,7 @@ export function Navbar({ user }: NavbarProps) {
                             <Link
                                 key={link.href}
                                 href={link.href}
+                                prefetch={false}
                                 className="text-sm font-medium transition-colors hover:text-primary hidden md:inline-block"
                             >
                                 {link.label}

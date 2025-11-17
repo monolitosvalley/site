@@ -38,6 +38,7 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
                 image_url: formData.image_url,
                 created_by: user.id,
                 approved: false,
+                event_date: new Date(`${formData.date}T${formData.time}`).toISOString(),
             })
 
             if (error) throw error
