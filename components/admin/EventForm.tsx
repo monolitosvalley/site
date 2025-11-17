@@ -16,9 +16,8 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        date: '',
-        start_time: '',
-        end_time: '',
+        event_datetime: '',
+        duration_minutes: '120',
         location: '',
         image_url: '',
     })
@@ -53,9 +52,8 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
             const { error } = await supabase.from('events').insert({
                 title: formData.title,
                 description: formData.description,
-                date: formData.date,
-                start_time: formData.start_time,
-                end_time: formData.end_time,
+                event_datetime: formData.event_datetime,
+                duration_minutes: parseInt(formData.duration_minutes),
                 location: formData.location,
                 image_url: formData.image_url,
                 created_by: user.id,
@@ -65,7 +63,7 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
             if (error) throw error
 
             toast.success('Evento criado com sucesso!')
-            setFormData({ title: '', description: '', date: '', start_time: '', end_time: '', location: '', image_url: '' })
+            setFormData({ title: '', description: '', event_datetime: '', duration_minutes: '120', location: '', image_url: '' })
             onSuccess()
         } catch (error) {
             toast.error('Erro ao criar evento')
@@ -96,31 +94,25 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
                         required
                         rows={4}
                     />
-                    <Input
-                        type="date"
-                        value={formData.date}
-                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                        required
-                    />
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="text-sm font-medium">Horário de Início</label>
-                            <Input
-                                type="time"
-                                value={formData.start_time}
-                                onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="text-sm font-medium">Horário de Término</label>
-                            <Input
-                                type="time"
-                                value={formData.end_time}
-                                onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                                required
-                            />
-                        </div>
+                    <div>
+                        <label className="text-sm font-medium">Data e Hora do Evento</label>
+                        <Input
+                            type="datetime-local"
+                            value={formData.event_datetime}
+                            onChange={(e) => setFormData({ ...formData, event_datetime: e.target.value })}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="text-sm font-medium">Duração (minutos)</label>
+                        <Input
+                            type="number"
+                            min="30"
+                            max="480"
+                            value={formData.duration_minutes}
+                            onChange={(e) => setFormData({ ...formData, duration_minutes: e.target.value })}
+                            required
+                        />
                     </div>
                     <Input
                         placeholder="Local do evento"

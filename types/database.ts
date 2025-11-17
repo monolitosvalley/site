@@ -88,6 +88,9 @@ export interface Opportunity {
   type: OpportunityType
   is_paid_feature: boolean
   deadline: string | null
+  image_url: string | null
+  application_url: string | null
+  active: boolean
   approved: boolean
   created_at: string
 }
@@ -95,8 +98,11 @@ export interface Opportunity {
 export interface Partner {
   id: string
   name: string
+  description: string | null
+  image_url: string | null
   logo_url: string | null
   website: string | null
+  category: string | null
   approved: boolean
   created_at: string
 }

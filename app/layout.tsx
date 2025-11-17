@@ -37,16 +37,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: 'https://monolitosvalley.com.br',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://monolitosvalley.com.br',
     siteName: 'Monólitos Valley',
     title: 'Monólitos Valley - Comunidade de Startups do Sertão Central Cearense',
     description: 'Comunidade de startups, inovação e oportunidades no Sertão Central Cearense',
     images: [
       {
-        url: 'https://monolitosvalley.com.br/monolitos-valley-logo-title.svg',
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://monolitosvalley.com.br'}/monolitos-valley-og.png`,
         width: 1200,
         height: 630,
         alt: 'Monólitos Valley',
+        type: 'image/png',
       },
     ],
   },
@@ -54,10 +55,11 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Monólitos Valley - Ecossistema de Inovação',
     description: 'Comunidade de startups e inovação do Sertão Central Cearense',
-    images: ['https://monolitosvalley.com.br/monolitos-valley-logo-title.svg'],
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL || 'https://monolitosvalley.com.br'}/monolitos-valley-og.png`],
+    creator: '@monolitosvalley',
   },
   alternates: {
-    canonical: 'https://monolitosvalley.com.br',
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://monolitosvalley.com.br',
   },
 }
 

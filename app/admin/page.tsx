@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, Check, X } from 'lucide-react'
+import { Loader2, Check, X, Edit } from 'lucide-react'
 import { toast } from 'sonner'
 import { OpportunityForm } from '@/components/admin/OpportunityForm'
 import { EventForm } from '@/components/admin/EventForm'
@@ -207,7 +207,24 @@ export default function AdminPage() {
                                             </div>
                                         </CardHeader>
                                         <CardContent>
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 flex-wrap">
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                        const editRoutes: Record<string, string> = {
+                                                            blog: `/admin/edit/blog/${item.id}`,
+                                                            events: `/admin/edit/event/${item.id}`,
+                                                            opportunities: `/admin/edit/opportunity/${item.id}`,
+                                                            partners: `/admin/edit/partner/${item.id}`,
+                                                            products: `/admin/edit/product/${item.id}`,
+                                                        }
+                                                        router.push(editRoutes[key] || '/')
+                                                    }}
+                                                >
+                                                    <Edit className="h-4 w-4 mr-2" />
+                                                    Editar
+                                                </Button>
                                                 <Button
                                                     size="sm"
                                                     onClick={() => {
