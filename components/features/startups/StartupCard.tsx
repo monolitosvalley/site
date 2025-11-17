@@ -30,7 +30,7 @@ export function StartupCard({ startup, variant = 'compact' }: StartupCardProps) 
                     <div className="flex-1 min-w-0">
                         <CardTitle className="flex items-center gap-2">
                             {startup.name}
-                            {startup.is_esg && (
+                            {startup.tem_esg && (
                                 <Badge variant="secondary" className="gap-1">
                                     <Leaf className="w-3 h-3" />
                                     ESG
@@ -53,15 +53,15 @@ export function StartupCard({ startup, variant = 'compact' }: StartupCardProps) 
                     {startup.estagio_maturidade && (
                         <Badge variant="outline">{startup.estagio_maturidade}</Badge>
                     )}
-                    {variant === 'detailed' && startup.tecnologias_utilizadas.length > 0 && (
+                    {variant === 'detailed' && startup.tecnologias && startup.tecnologias.length > 0 && (
                         <>
-                            {startup.tecnologias_utilizadas.slice(0, 3).map((tech: string) => (
+                            {startup.tecnologias.slice(0, 3).map((tech: string) => (
                                 <Badge key={tech} variant="secondary">
                                     {tech}
                                 </Badge>
                             ))}
-                            {startup.tecnologias_utilizadas.length > 3 && (
-                                <Badge variant="secondary">+{startup.tecnologias_utilizadas.length - 3}</Badge>
+                            {startup.tecnologias.length > 3 && (
+                                <Badge variant="secondary">+{startup.tecnologias.length - 3}</Badge>
                             )}
                         </>
                     )}

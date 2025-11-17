@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { profileSchema, ProfileUpdate } from '@/lib/validations/profile'
+import { profileSchema, ProfileFormData } from '@/lib/validations/profile'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -24,15 +24,17 @@ export function ProfileForm({ profile, onSuccess }: ProfileFormProps) {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<ProfileUpdate>({
+    } = useForm<ProfileFormData>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
             full_name: profile.full_name || '',
-            seeking_details: profile.seeking_details || '',
+            bio: profile.bio || '',
+            phone: profile.phone || '',
+            linkedin: profile.linkedin || '',
         },
     })
 
-    const onSubmit = async (data: ProfileUpdate) => {
+    const onSubmit = async (data: ProfileFormData) => {
         setLoading(true)
         try {
             const res = await fetch('/api/profile', {
