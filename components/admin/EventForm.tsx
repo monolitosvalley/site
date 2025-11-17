@@ -15,7 +15,8 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
         title: '',
         description: '',
         date: '',
-        time: '',
+        start_time: '',
+        end_time: '',
         location: '',
         image_url: '',
     })
@@ -33,18 +34,18 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
                 title: formData.title,
                 description: formData.description,
                 date: formData.date,
-                time: formData.time,
+                start_time: formData.start_time,
+                end_time: formData.end_time,
                 location: formData.location,
                 image_url: formData.image_url,
                 created_by: user.id,
                 approved: false,
-                event_date: new Date(`${formData.date}T${formData.time}`).toISOString(),
             })
 
             if (error) throw error
 
             toast.success('Evento criado com sucesso!')
-            setFormData({ title: '', description: '', date: '', time: '', location: '', image_url: '' })
+            setFormData({ title: '', description: '', date: '', start_time: '', end_time: '', location: '', image_url: '' })
             onSuccess()
         } catch (error) {
             toast.error('Erro ao criar evento')
@@ -75,19 +76,31 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
                         required
                         rows={4}
                     />
+                    <Input
+                        type="date"
+                        value={formData.date}
+                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                        required
+                    />
                     <div className="grid grid-cols-2 gap-4">
-                        <Input
-                            type="date"
-                            value={formData.date}
-                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                            required
-                        />
-                        <Input
-                            type="time"
-                            value={formData.time}
-                            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                            required
-                        />
+                        <div>
+                            <label className="text-sm font-medium">Horário de Início</label>
+                            <Input
+                                type="time"
+                                value={formData.start_time}
+                                onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium">Horário de Término</label>
+                            <Input
+                                type="time"
+                                value={formData.end_time}
+                                onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
+                                required
+                            />
+                        </div>
                     </div>
                     <Input
                         placeholder="Local do evento"

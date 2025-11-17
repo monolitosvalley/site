@@ -11,8 +11,15 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, variant = 'list' }: EventCardProps) {
-    const eventDate = new Date(event.event_date)
-    const formattedDate = format(eventDate, "d 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR })
+    const formattedDate = event.date && event.start_time
+        ? format(new Date(`${event.date}T${event.start_time}`), "d 'de' MMMM 'de' yyyy", { locale: ptBR })
+        : 'Data não definida'
+
+    const timeRange = event.start_time && event.end_time
+        ? `${event.start_time} - ${event.end_time}`
+        : event.start_time
+            ? `${event.start_time}`
+            : ''
 
     if (variant === 'carousel') {
         return (
@@ -29,9 +36,12 @@ export function EventCard({ event, variant = 'list' }: EventCardProps) {
                 )}
                 <CardHeader>
                     <CardTitle>{event.title}</CardTitle>
-                    <CardDescription className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        {formattedDate}
+                    <CardDescription className="flex flex-col gap-1">
+                        <span className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4" />
+                            {formattedDate}
+                        </span>
+                        {timeRange && <span className="text-xs">{timeRange}</span>}
                     </CardDescription>
                 </CardHeader>
                 {event.location && (
@@ -61,9 +71,12 @@ export function EventCard({ event, variant = 'list' }: EventCardProps) {
                     )}
                     <div className="flex-1">
                         <CardTitle>{event.title}</CardTitle>
-                        <CardDescription className="flex items-center gap-2 mt-2">
-                            <Calendar className="w-4 h-4" />
-                            {formattedDate}
+                        <CardDescription className="flex flex-col gap-1 mt-2">
+                            <span className="flex items-center gap-2">
+                                <Calendar className="w-4 h-4" />
+                                {formattedDate}
+                            </span>
+                            {timeRange && <span className="text-xs">{timeRange}</span>}
                         </CardDescription>
                         {event.location && (
                             <CardDescription className="flex items-center gap-2 mt-1">

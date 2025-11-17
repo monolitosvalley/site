@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createServiceClient()
 
-    let query = supabase.from("opportunities").select("*")
+    let query = supabase.from("opportunities").select("*").eq('approved', true).eq('active', true)
 
     // Apply filters
     if (type) {

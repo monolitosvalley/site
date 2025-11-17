@@ -34,7 +34,7 @@ export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
                 category: formData.category,
                 type: formData.type,
                 deadline: formData.deadline,
-                created_by: user.id,
+                active: true,
                 approved: false,
             })
 
@@ -88,7 +88,6 @@ export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
                         type="date"
                         value={formData.deadline}
                         onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                        required
                     />
                     <Button type="submit" disabled={loading} className="w-full">
                         {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}

@@ -46,7 +46,7 @@ export default function EventsPage() {
         const grouped: { [key: string]: Event[] } = {}
 
         events.forEach((event) => {
-            const date = parseISO(event.event_date)
+            const date = event.date ? new Date(event.date) : new Date()
             const monthKey = format(date, 'MMMM yyyy', { locale: ptBR })
 
             if (!grouped[monthKey]) {

@@ -81,7 +81,7 @@ export default function AdminPage() {
         const [blog, events, opportunities, partners, products] = await Promise.all([
             supabase.from('blog_posts').select('id, title, created_at').eq('approved', false),
             supabase.from('events').select('id, title, created_at').eq('approved', false),
-            supabase.from('opportunities').select('id, title, created_at').eq('approved', false),
+            supabase.from('opportunities').select('id, title, created_at, category, type, deadline').eq('approved', false),
             supabase.from('partners').select('id, name, created_at').eq('approved', false),
             supabase.from('store_products').select('id, name, created_at').eq('approved', false),
         ])
@@ -128,6 +128,8 @@ export default function AdminPage() {
             console.error(error)
         }
     }
+
+
 
     if (loading) {
         return (
@@ -189,19 +191,26 @@ export default function AdminPage() {
                             </Card>
                         ) : (
                             <div className="space-y-4">
-                                {items.map((item) => (
+                                {items.map((item: any) => (
                                     <Card key={item.id}>
                                         <CardHeader>
                                             <CardTitle className="text-lg">{item.title}</CardTitle>
                                             <CardDescription>
                                                 Criado em {new Date(item.created_at).toLocaleDateString('pt-BR')}
                                             </CardDescription>
+                                            {item.type === 'opportunity' && (
+                                                <div className="flex gap-2 text-sm">
+                                                    <Badge variant="secondary">{item.category}</Badge>
+                                                    <Badge variant="secondary">{item.type}</Badge>
+                                                    {item.deadline && <Badge variant="outline">Prazo: {new Date(item.deadline).toLocaleDateString('pt-BR')}</Badge>}
+                                                </div>
+                                            )}
                                         </CardHeader>
                                         <CardContent>
                                             <div className="flex gap-2">
                                                 <Button
                                                     size="sm"
-                                                    onClick={() => handleApprove(item.id, `${key === 'blog' ? 'blog_posts' : key === 'products' ? 'store_products' : key}`)}
+                                                    onClick={() => handleApprove(item.id, key === 'blog' ? 'blog_posts' : key === 'products' ? 'store_products' : key)}
                                                 >
                                                     <Check className="h-4 w-4 mr-2" />
                                                     Aprovar
@@ -209,7 +218,7 @@ export default function AdminPage() {
                                                 <Button
                                                     size="sm"
                                                     variant="destructive"
-                                                    onClick={() => handleReject(item.id, `${key === 'blog' ? 'blog_posts' : key === 'products' ? 'store_products' : key}`)}
+                                                    onClick={() => handleReject(item.id, key === 'blog' ? 'blog_posts' : key === 'products' ? 'store_products' : key)}
                                                 >
                                                     <X className="h-4 w-4 mr-2" />
                                                     Rejeitar
@@ -222,6 +231,8 @@ export default function AdminPage() {
                         )}
                     </TabsContent>
                 ))}
+
+
             </Tabs>
         </div>
     )
