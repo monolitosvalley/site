@@ -1,0 +1,152 @@
+import { createClient } from "@/lib/supabase/server"
+import { NextRequest, NextResponse } from "next/server"
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
+const MAX_PDF_SIZE = 10 * 1024 * 1024 // 10MB
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp"
+]
+const ACCEPTED_PDF_TYPE = "application/pdf"
+
+type BucketName =
+  | "avatars"
+  | "logos"
+  | "pitch-decks"
+  | "events"
+  | "blog"
+  | "products"
+
+export async function POST(request: NextRequest) {
+  try {
+    // Validate authentication
+    const supabase = await createClient()
+    const {
+      data: { user },
+      error: authError
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
+    }
+
+    // Parse form data
+    const formData = await request.formData()
+    const file = formData.get("file") as File | null
+    const bucket = formData.get("bucket") as BucketName | null
+
+    if (!file) {
+      return NextResponse.json(
+        { error: "Arquivo não fornecido" },
+        { status: 400 }
+      )
+    }
+
+    if (!bucket) {
+      return NextResponse.json(
+        { error: "Bucket não especificado" },
+        { status: 400 }
+      )
+    }
+
+    // Validate bucket
+    const validBuckets: BucketName[] = [
+      "avatars",
+      "logos",
+      "pitch-decks",
+      "events",
+      "blog",
+      "products"
+    ]
+    if (!validBuckets.includes(bucket)) {
+      return NextResponse.json({ error: "Bucket inválido" }, { status: 400 })
+    }
+
+    // Validate file type and size
+    const isPdf = file.type === ACCEPTED_PDF_TYPE
+    const isImage = ACCEPTED_IMAGE_TYPES.includes(file.type)
+
+    if (!isPdf && !isImage) {
+      return NextResponse.json(
+        { error: "Tipo de arquivo não suportado. Use JPEG, PNG, WebP ou PDF" },
+        { status: 400 }
+      )
+    }
+
+    // Validate size based on type
+    if (isPdf && file.size > MAX_PDF_SIZE) {
+      return NextResponse.json(
+        { error: "PDF deve ter no máximo 10MB" },
+        { status: 400 }
+      )
+    }
+
+    if (isImage && file.size > MAX_IMAGE_SIZE) {
+      return NextResponse.json(
+        { error: "Imagem deve ter no máximo 5MB" },
+        { status: 400 }
+      )
+    }
+
+    // Validate bucket-file type compatibility
+    if (bucket === "pitch-decks" && !isPdf) {
+      return NextResponse.json(
+        { error: "Bucket pitch-decks aceita apenas arquivos PDF" },
+        { status: 400 }
+      )
+    }
+
+    if (bucket !== "pitch-decks" && !isImage) {
+      return NextResponse.json(
+        { error: `Bucket ${bucket} aceita apenas imagens` },
+        { status: 400 }
+      )
+    }
+
+    // Generate unique filename
+    const fileExt = file.name.split(".").pop()
+    const fileName = `${user.id}/${Date.now()}.${fileExt}`
+
+    // Convert File to ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer()
+    const buffer = Buffer.from(arrayBuffer)
+
+    // Upload to Supabase Storage
+    const { data, error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, buffer, {
+        contentType: file.type,
+        upsert: false
+      })
+
+    if (uploadError) {
+      console.error("Upload error:", uploadError)
+      return NextResponse.json(
+        { error: "Erro ao fazer upload do arquivo" },
+        { status: 500 }
+      )
+    }
+
+    // Get public URL
+    const {
+      data: { publicUrl }
+    } = supabase.storage.from(bucket).getPublicUrl(data.path)
+
+    return NextResponse.json(
+      {
+        url: publicUrl,
+        path: data.path,
+        bucket
+      },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error("Unexpected error:", error)
+    return NextResponse.json(
+      { error: "Erro interno do servidor" },
+      { status: 500 }
+    )
+  }
+}
