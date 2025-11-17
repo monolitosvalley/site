@@ -5,6 +5,7 @@ import { Profile, Startup } from '@/types/database'
 import { ProfileForm } from '@/components/features/profile/ProfileForm'
 import { AvatarUpload } from '@/components/features/profile/AvatarUpload'
 import { SeekingForm } from '@/components/features/profile/SeekingForm'
+import { SecurityForm } from '@/components/features/profile/SecurityForm'
 import { StartupForm } from '@/components/features/startups/StartupForm'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -81,10 +82,11 @@ export default function ProfilePage() {
                 </div>
 
                 <Tabs defaultValue="info" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
+                    <TabsList className="grid w-full grid-cols-4">
                         <TabsTrigger value="info">Minhas Informações</TabsTrigger>
                         <TabsTrigger value="startup">Minha Startup</TabsTrigger>
                         <TabsTrigger value="seeking">Oportunidades</TabsTrigger>
+                        <TabsTrigger value="security">Segurança</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="info" className="mt-6">
@@ -144,6 +146,10 @@ export default function ProfilePage() {
                                 <SeekingForm seekingDetails={profile.seeking_details} onSuccess={fetchProfile} />
                             </CardContent>
                         </Card>
+                    </TabsContent>
+
+                    <TabsContent value="security" className="mt-6">
+                        <SecurityForm />
                     </TabsContent>
                 </Tabs>
             </div>

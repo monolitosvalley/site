@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import Link from 'next/link'
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
@@ -48,7 +49,7 @@ export default function LoginPage() {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: `${window.location.origin}/profile`,
+                    emailRedirectTo: `${window.location.origin}/auth/callback?next=/profile`,
                 },
             })
 
@@ -92,7 +93,15 @@ export default function LoginPage() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="password">Senha</Label>
+                                    <div className="flex items-center justify-between">
+                                        <Label htmlFor="password">Senha</Label>
+                                        <Link
+                                            href="/forgot-password"
+                                            className="text-sm text-primary hover:underline"
+                                        >
+                                            Esqueci minha senha
+                                        </Link>
+                                    </div>
                                     <Input
                                         id="password"
                                         type="password"
@@ -134,8 +143,8 @@ export default function LoginPage() {
                     {message && (
                         <div
                             className={`mt-4 rounded-md p-3 text-sm ${message.type === 'success'
-                                    ? 'bg-green-50 text-green-800'
-                                    : 'bg-red-50 text-red-800'
+                                ? 'bg-green-50 text-green-800'
+                                : 'bg-red-50 text-red-800'
                                 }`}
                         >
                             {message.text}
