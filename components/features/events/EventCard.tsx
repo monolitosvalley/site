@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Calendar, MapPin } from 'lucide-react'
 import Image from 'next/image'
 import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 interface EventCardProps {
     event: Event
@@ -11,7 +12,7 @@ interface EventCardProps {
 
 export function EventCard({ event, variant = 'list' }: EventCardProps) {
     const eventDate = new Date(event.event_date)
-    const formattedDate = format(eventDate, "dd/MM/yyyy 'às' HH:mm")
+    const formattedDate = format(eventDate, "d 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR })
 
     if (variant === 'carousel') {
         return (

@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Crown } from 'lucide-react'
 import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 interface OpportunityCardProps {
     opportunity: Opportunity
@@ -19,7 +20,9 @@ const TYPE_LABELS: Record<string, string> = {
 
 export function OpportunityCard({ opportunity }: OpportunityCardProps) {
     const deadline = opportunity.deadline ? new Date(opportunity.deadline) : null
-    const formattedDeadline = deadline ? format(deadline, "dd/MM/yyyy") : null
+    const formattedDeadline = deadline
+        ? format(deadline, "d 'de' MMMM 'de' yyyy", { locale: ptBR })
+        : null
 
     return (
         <Card className="hover:shadow-lg transition-shadow">

@@ -5,6 +5,7 @@ import { Calendar } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 interface BlogCardProps {
     post: BlogPost
@@ -13,7 +14,7 @@ interface BlogCardProps {
 
 export function BlogCard({ post, variant = 'compact' }: BlogCardProps) {
     const createdDate = new Date(post.created_at)
-    const formattedDate = format(createdDate, "dd/MM/yyyy")
+    const formattedDate = format(createdDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR })
 
     // Create excerpt from content (first 150 characters)
     const excerpt = post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '')

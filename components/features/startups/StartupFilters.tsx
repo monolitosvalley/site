@@ -59,16 +59,16 @@ export function StartupFilters({ filters, onFilterChange }: StartupFiltersProps)
                 <div className="space-y-2">
                     <Label>Segmento</Label>
                     <Select
-                        value={filters.segmento || ''}
+                        value={filters.segmento || 'all'}
                         onValueChange={(value) =>
-                            onFilterChange({ ...filters, segmento: value || undefined })
+                            onFilterChange({ ...filters, segmento: value === 'all' ? undefined : value })
                         }
                     >
                         <SelectTrigger>
                             <SelectValue placeholder="Todos os segmentos" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Todos os segmentos</SelectItem>
+                            <SelectItem value="all">Todos os segmentos</SelectItem>
                             {SEGMENTOS.map((segmento) => (
                                 <SelectItem key={segmento} value={segmento}>
                                     {segmento}
@@ -81,16 +81,19 @@ export function StartupFilters({ filters, onFilterChange }: StartupFiltersProps)
                 <div className="space-y-2">
                     <Label>Estágio de Maturidade</Label>
                     <Select
-                        value={filters.estagio_maturidade || ''}
+                        value={filters.estagio_maturidade || 'all'}
                         onValueChange={(value) =>
-                            onFilterChange({ ...filters, estagio_maturidade: value || undefined })
+                            onFilterChange({
+                                ...filters,
+                                estagio_maturidade: value === 'all' ? undefined : value,
+                            })
                         }
                     >
                         <SelectTrigger>
                             <SelectValue placeholder="Todos os estágios" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Todos os estágios</SelectItem>
+                            <SelectItem value="all">Todos os estágios</SelectItem>
                             {ESTAGIOS.map((estagio) => (
                                 <SelectItem key={estagio} value={estagio}>
                                     {estagio}
