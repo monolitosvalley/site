@@ -1,4 +1,8 @@
--- Simplify opportunities table: add active status
+-- Simplify opportunities table: remove category column and add active status
+
+-- Remove redundant category column if it exists
+ALTER TABLE opportunities 
+DROP COLUMN IF EXISTS category;
 
 -- Add active column (default true for new opportunities)
 ALTER TABLE opportunities 

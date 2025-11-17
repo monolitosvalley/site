@@ -77,6 +77,7 @@ export type OpportunityType =
   | "Edital"
   | "InovacaoAberta"
   | "Beneficio"
+  | "Mentoria"
   | "Talento"
   | "Vaga"
 

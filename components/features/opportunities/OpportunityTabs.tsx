@@ -16,8 +16,9 @@ const TABS: { value: OpportunityType; label: string; requiresAuth: boolean }[] =
     { value: 'Investidor', label: 'Investidores', requiresAuth: false },
     { value: 'Edital', label: 'Editais', requiresAuth: false },
     { value: 'InovacaoAberta', label: 'Inovação Aberta', requiresAuth: false },
-    { value: 'Beneficio', label: 'Clube de Benefícios', requiresAuth: false },
-    { value: 'Vaga', label: 'Vagas', requiresAuth: true },
+    { value: 'Beneficio', label: 'Benefícios', requiresAuth: false },
+    { value: 'Mentoria', label: 'Mentoria', requiresAuth: false },
+    { value: 'Vaga', label: 'Vagas', requiresAuth: false },
 ]
 
 export function OpportunityTabs({ opportunities, isAuthenticated }: OpportunityTabsProps) {
