@@ -34,7 +34,6 @@ export function PartnerForm({ onSuccess }: { onSuccess: () => void }) {
                 website: formData.website,
                 logo_url: formData.logo_url,
                 category: formData.category,
-                created_by: user.id,
                 approved: false,
             })
 

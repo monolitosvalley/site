@@ -32,7 +32,6 @@ export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
                 description: formData.description,
                 category: formData.category,
                 deadline: formData.deadline,
-                created_by: user.id,
                 approved: false,
             })
 
