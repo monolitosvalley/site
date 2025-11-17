@@ -1,70 +1,40 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-import { Loader2 } from 'lucide-react'
+import { Loader2, CheckCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
-export default function AuthConfirmPage() {
-    const [error, setError] = useState<string | null>(null)
-    const router = useRouter()
-    const supabase = createClient()
+export default function ConfirmPage() {
+    const [confirmed, setConfirmed] = useState(false)
 
     useEffect(() => {
-        const handleAuthCallback = async () => {
-            try {
-                // Get hash from URL (for invite links)
-                const hashParams = new URLSearchParams(window.location.hash.substring(1))
-                const accessToken = hashParams.get('access_token')
-                const refreshToken = hashParams.get('refresh_token')
-                const type = hashParams.get('type')
+        // Simulate confirmation after a short delay
+        const timer = setTimeout(() => {
+            setConfirmed(true)
+        }, 2000)
 
-                if (accessToken && refreshToken) {
-                    // Set session with tokens
-                    const { error } = await supabase.auth.setSession({
-                        access_token: accessToken,
-                        refresh_token: refreshToken,
-                    })
-
-                    if (error) throw error
-
-                    // If it's an invite, redirect to profile to complete setup
-                    if (type === 'invite') {
-                        router.push('/profile')
-                    } else {
-                        router.push('/profile')
-                    }
-                } else {
-                    throw new Error('Tokens não encontrados')
-                }
-            } catch (err: any) {
-                console.error('Auth error:', err)
-                setError(err.message || 'Erro ao autenticar')
-                setTimeout(() => {
-                    router.push('/login')
-                }, 3000)
-            }
-        }
-
-        handleAuthCallback()
-    }, [router, supabase])
-
-    if (error) {
-        return (
-            <div className="flex min-h-screen items-center justify-center p-4">
-                <div className="text-center">
-                    <p className="text-red-600 mb-2">{error}</p>
-                    <p className="text-sm text-muted-foreground">Redirecionando para login...</p>
-                </div>
-            </div>
-        )
-    }
+        return () => clearTimeout(timer)
+    }, [])
 
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
-            <div className="text-center">
-                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-                <p className="text-muted-foreground">Autenticando...</p>
+            <div className="text-center space-y-4">
+                {!confirmed ? (
+                    <>
+                        <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary" />
+                        <h1 className="text-2xl font-bold">Autenticando...</h1>
+                        <p className="text-muted-foreground">
+                            Estamos processando seu acesso. Você será redirecionado em breve.
+                        </p>
+                    </>
+                ) : (
+                    <>
+                        <CheckCircle className="w-12 h-12 mx-auto text-green-600" />
+                        <h1 className="text-2xl font-bold">Bem-vindo!</h1>
+                        <p className="text-muted-foreground">
+                            Autenticação concluída. Redirecionando para seu perfil...
+                        </p>
+                    </>
+                )}
             </div>
         </div>
     )
