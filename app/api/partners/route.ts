@@ -8,6 +8,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("partners")
       .select("*")
+      .eq("approved", true)
       .order("created_at", { ascending: false })
 
     if (error) {

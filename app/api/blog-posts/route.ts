@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
       .select("*, author:profiles(id, full_name, avatar_url)", {
         count: "exact"
       })
+      .eq("approved", true)
       .range(from, to)
       .order("created_at", { ascending: false })
 

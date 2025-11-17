@@ -14,7 +14,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { LogOut, User as UserIcon } from 'lucide-react'
+import { LogOut, User as UserIcon, Settings } from 'lucide-react'
 
 interface AuthButtonProps {
     user: User | null
@@ -26,6 +26,7 @@ export function AuthButton({ user: initialUser }: AuthButtonProps) {
     const [user, setUser] = useState<User | null>(initialUser)
     const [profile, setProfile] = useState<any>(null)
     const [loading, setLoading] = useState(true)
+    const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -36,10 +37,11 @@ export function AuthButton({ user: initialUser }: AuthButtonProps) {
                 if (currentUser) {
                     const { data } = await supabase
                         .from('profiles')
-                        .select('full_name, avatar_url')
+                        .select('full_name, avatar_url, role')
                         .eq('id', currentUser.id)
                         .single()
                     setProfile(data)
+                    setIsAdmin(data?.role === 'admin')
                 }
             } catch (error) {
                 console.error('Error fetching user:', error)
@@ -121,6 +123,15 @@ export function AuthButton({ user: initialUser }: AuthButtonProps) {
                     <UserIcon className="mr-2 h-4 w-4" />
                     <span>Perfil</span>
                 </DropdownMenuItem>
+                {isAdmin && (
+                    <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => router.push('/admin')}>
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Administração</span>
+                        </DropdownMenuItem>
+                    </>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
