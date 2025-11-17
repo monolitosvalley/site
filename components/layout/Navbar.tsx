@@ -21,15 +21,23 @@ export function Navbar({ user }: NavbarProps) {
         <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto px-4 flex h-16 items-center">
                 <div className="mr-4 flex">
-                    <Link href="/" className="mr-6 flex items-center space-x-2">
+                    <Link href="/" className="mr-6 flex items-center">
+                        {/* Mobile logo - just the M */}
                         <Image
                             src="/monolitos-valley-logo.svg"
                             alt="Monólitos Valley"
                             width={32}
                             height={32}
-                            className="h-8 w-8"
+                            className="h-8 w-8 md:hidden"
                         />
-                        <span className="font-bold text-lg hidden sm:inline">Monólitos Valley</span>
+                        {/* Desktop logo - full title */}
+                        <Image
+                            src="/monolitos-valley-logo-title.svg"
+                            alt="Monólitos Valley"
+                            width={160}
+                            height={40}
+                            className="h-10 hidden md:block"
+                        />
                     </Link>
                 </div>
                 <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">

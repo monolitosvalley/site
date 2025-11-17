@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export function Footer() {
     const currentYear = new Date().getFullYear()
@@ -8,7 +9,24 @@ export function Footer() {
             <div className="container mx-auto px-4 py-8 md:py-12">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
                     <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">Monólitos Valley</h3>
+                        <Link href="/" className="flex items-center gap-2">
+                            {/* Mobile logo */}
+                            <Image
+                                src="/monolitos-valley-logo-small.svg"
+                                alt="Monólitos Valley"
+                                width={32}
+                                height={32}
+                                className="h-8 w-8 md:hidden"
+                            />
+                            {/* Desktop logo */}
+                            <Image
+                                src="/monolitos-valley-logo.svg"
+                                alt="Monólitos Valley"
+                                width={40}
+                                height={40}
+                                className="h-10 w-10 hidden md:block"
+                            />
+                        </Link>
                         <p className="text-sm text-muted-foreground">
                             Ecossistema de inovação do Sertão Central Cearense
                         </p>

@@ -1,7 +1,9 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import {
     DropdownMenu,
@@ -18,8 +20,48 @@ interface AuthButtonProps {
     user: User | null
 }
 
-export function AuthButton({ user }: AuthButtonProps) {
+export function AuthButton({ user: initialUser }: AuthButtonProps) {
     const router = useRouter()
+    const supabase = createClient()
+    const [user, setUser] = useState<User | null>(initialUser)
+    const [profile, setProfile] = useState<any>(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const { data: { user: currentUser } } = await supabase.auth.getUser()
+                setUser(currentUser)
+
+                if (currentUser) {
+                    const { data } = await supabase
+                        .from('profiles')
+                        .select('full_name, avatar_url')
+                        .eq('id', currentUser.id)
+                        .single()
+                    setProfile(data)
+                }
+            } catch (error) {
+                console.error('Error fetching user:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchUser()
+
+        // Subscribe to auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+            setUser(session?.user || null)
+            if (session?.user) {
+                fetchUser()
+            } else {
+                setProfile(null)
+            }
+        })
+
+        return () => subscription?.unsubscribe()
+    }, [supabase])
 
     const handleLogout = async () => {
         await fetch('/api/auth/logout', { method: 'POST' })
@@ -35,17 +77,32 @@ export function AuthButton({ user }: AuthButtonProps) {
         )
     }
 
+    if (loading) {
+        return <Button variant="ghost" className="h-10 w-10 rounded-full animate-pulse" />
+    }
+
+    if (!user) {
+        return (
+            <Button onClick={() => router.push('/login')} variant="default">
+                Login
+            </Button>
+        )
+    }
+
     const initials = user.email
         ?.split('@')[0]
         .slice(0, 2)
         .toUpperCase() || 'U'
+
+    const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url
+    const fullName = profile?.full_name || user.user_metadata?.full_name || 'Usuário'
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar className="h-10 w-10">
-                        <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || ''} />
+                        <AvatarImage src={avatarUrl} alt={user.email || ''} />
                         <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
                 </Button>
@@ -54,7 +111,7 @@ export function AuthButton({ user }: AuthButtonProps) {
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">
-                            {user.user_metadata?.full_name || 'Usuário'}
+                            {fullName}
                         </p>
                         <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
                     </div>

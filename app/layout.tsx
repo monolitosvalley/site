@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
@@ -18,9 +18,47 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#000000',
+}
+
 export const metadata: Metadata = {
-  title: 'Monólitos Valley - Ecossistema de Inovação do Sertão Central',
-  description: 'Portal da comunidade de startups e inovação do Sertão Central Cearense',
+  title: 'Monólitos Valley - Ecossistema de Inovação do Sertão Central Cearense',
+  description: 'Comunidade de startups, inovação e oportunidades no Sertão Central Cearense. Conecte-se com empreendedores, participe de eventos e acesse recursos para crescer seu negócio.',
+  keywords: ['startups', 'inovação', 'Ceará', 'Sertão Central', 'empreendedorismo', 'tecnologia', 'comunidade'],
+  authors: [{ name: 'Monólitos Valley' }],
+  creator: 'Monólitos Valley',
+  publisher: 'Monólitos Valley',
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    url: 'https://monolitosvalley.com.br',
+    siteName: 'Monólitos Valley',
+    title: 'Monólitos Valley - Ecossistema de Inovação do Sertão Central Cearense',
+    description: 'Comunidade de startups, inovação e oportunidades no Sertão Central Cearense',
+    images: [
+      {
+        url: 'https://monolitosvalley.com.br/monolitos-valley-logo-title.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Monólitos Valley',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Monólitos Valley - Ecossistema de Inovação',
+    description: 'Comunidade de startups e inovação do Sertão Central Cearense',
+    images: ['https://monolitosvalley.com.br/monolitos-valley-logo-title.svg'],
+  },
+  alternates: {
+    canonical: 'https://monolitosvalley.com.br',
+  },
 }
 
 export default async function RootLayout({
