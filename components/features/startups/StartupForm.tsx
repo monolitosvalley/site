@@ -37,9 +37,11 @@ const SEGMENTOS = [
 
 const ESTAGIOS = [
     { value: 'ideia', label: 'Ideação' },
+    { value: 'validacao', label: 'Validação' },
     { value: 'mvp', label: 'MVP' },
     { value: 'tracao', label: 'Tração' },
-    { value: 'escala', label: 'Scale-up' },
+    { value: 'escala', label: 'Escala' },
+    { value: 'crescimento', label: 'Crescimento' },
 ] as const
 
 export function StartupForm({ startup, onSuccess }: StartupFormProps) {

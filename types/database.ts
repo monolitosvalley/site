@@ -12,7 +12,13 @@ export interface Profile {
   updated_at: string
 }
 
-export type EstagioMaturidade = "ideia" | "mvp" | "tracao" | "escala"
+export type EstagioMaturidade =
+  | "ideia"
+  | "validacao"
+  | "mvp"
+  | "tracao"
+  | "escala"
+  | "crescimento"
 
 export interface Startup {
   id: string
@@ -34,6 +40,7 @@ export interface Startup {
   tem_esg: boolean
   detalhes_esg: string | null
   pitch_deck_url: string | null
+  approved: boolean
   created_at: string
   updated_at: string
 }
@@ -45,6 +52,7 @@ export interface Event {
   event_date: string
   image_url: string | null
   location: string | null
+  approved: boolean
   created_at: string
 }
 
@@ -55,6 +63,7 @@ export interface BlogPost {
   content: string
   image_url: string | null
   author_id: string | null
+  approved: boolean
   created_at: string
   updated_at: string
   author?: Profile
@@ -75,6 +84,7 @@ export interface Opportunity {
   type: OpportunityType
   is_paid_feature: boolean
   deadline: string | null
+  approved: boolean
   created_at: string
 }
 
@@ -83,6 +93,7 @@ export interface Partner {
   name: string
   logo_url: string | null
   website: string | null
+  approved: boolean
   created_at: string
 }
 
@@ -93,5 +104,6 @@ export interface StoreProduct {
   price: number
   image_url: string | null
   external_link: string
+  approved: boolean
   created_at: string
 }

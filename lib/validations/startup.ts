@@ -1,18 +1,46 @@
 import { z } from "zod"
 
 export const startupSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  name: z.string().min(2, "O nome da startup deve ter pelo menos 2 caracteres"),
   description: z
     .string()
-    .min(10, "Descrição deve ter pelo menos 10 caracteres"),
-  segmento: z.string().min(1, "Segmento é obrigatório"),
-  estagio_maturidade: z.enum(["ideia", "mvp", "tracao", "escala"]),
-  ano_fundacao: z.number().int().min(1900).max(new Date().getFullYear()),
-  website: z.string().url("URL inválida").optional().or(z.literal("")),
-  linkedin: z.string().url("URL inválida").optional().or(z.literal("")),
-  instagram: z.string().url("URL inválida").optional().or(z.literal("")),
-  cidade: z.string().min(1, "Cidade é obrigatória"),
-  estado: z.string().length(2, "Estado deve ter 2 caracteres"),
+    .min(
+      10,
+      "A descrição deve ter pelo menos 10 caracteres para ajudar outros a entenderem sua startup"
+    ),
+  segmento: z.string().min(1, "Por favor, selecione o segmento da sua startup"),
+  estagio_maturidade: z.enum([
+    "ideia",
+    "validacao",
+    "mvp",
+    "tracao",
+    "escala",
+    "crescimento"
+  ]),
+  ano_fundacao: z
+    .number()
+    .int()
+    .min(1900, "Ano inválido")
+    .max(new Date().getFullYear(), "O ano não pode ser no futuro"),
+  website: z
+    .string()
+    .url("Digite uma URL válida (ex: https://seusite.com)")
+    .optional()
+    .or(z.literal("")),
+  linkedin: z
+    .string()
+    .url("Digite uma URL válida do LinkedIn")
+    .optional()
+    .or(z.literal("")),
+  instagram: z
+    .string()
+    .url("Digite uma URL válida do Instagram")
+    .optional()
+    .or(z.literal("")),
+  cidade: z
+    .string()
+    .min(1, "Informe a cidade onde sua startup está localizada"),
+  estado: z.string().length(2, "Digite a sigla do estado (ex: CE, SP, RJ)"),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
   tecnologias: z.array(z.string()).optional(),
