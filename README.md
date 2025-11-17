@@ -1,36 +1,251 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portal Monólitos Valley
 
-## Getting Started
+Portal da comunidade Monólitos Valley - conectando startups, empreendedores e oportunidades no Sertão Central do Ceará.
 
-First, run the development server:
+## 🚀 Tecnologias
+
+- **Framework**: Next.js 15 (App Router)
+- **Linguagem**: TypeScript
+- **Estilização**: Tailwind CSS
+- **Componentes**: shadcn/ui
+- **Banco de Dados**: Supabase (PostgreSQL)
+- **Autenticação**: Supabase Auth
+- **Storage**: Supabase Storage
+- **Validação**: Zod
+- **Formulários**: React Hook Form
+- **Datas**: date-fns
+- **Ícones**: Lucide React
+
+## 📋 Pré-requisitos
+
+- Node.js 18+
+- npm ou yarn
+- Conta no Supabase
+
+## 🔧 Instalação
+
+1. Clone o repositório:
+
+```bash
+git clone <repository-url>
+cd monolitos-valley-portal
+```
+
+2. Instale as dependências:
+
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente:
+
+Crie um arquivo `.env.local` na raiz do projeto:
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Brevo (opcional - para emails customizados)
+BREVO_API_KEY=your_brevo_api_key
+BREVO_SENDER_EMAIL=noreply@monolitosvalley.com
+BREVO_SENDER_NAME=Monólitos Valley
+```
+
+4. Execute as migrations do Supabase:
+
+```bash
+# Instale o Supabase CLI
+npm install -g supabase
+
+# Faça login
+supabase login
+
+# Link com seu projeto
+supabase link --project-ref your-project-ref
+
+# Execute as migrations
+supabase db push
+```
+
+5. Configure os buckets de storage no Supabase:
+
+Execute o script SQL em `supabase/migrations/002_storage_buckets.sql` no SQL Editor do Supabase.
+
+6. Configure as URLs de redirecionamento no Supabase:
+
+No painel do Supabase, vá em Authentication > URL Configuration e adicione:
+
+**Site URL:**
+
+```
+http://localhost:3000
+```
+
+**Redirect URLs:**
+
+```
+http://localhost:3000
+http://localhost:3000/auth/callback
+```
+
+## 🏃 Executando o projeto
+
+### Desenvolvimento
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build de produção
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+### Lint
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📁 Estrutura do Projeto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+monolitos-valley-portal/
+├── app/                          # App Router do Next.js
+│   ├── (auth)/                   # Rotas de autenticação
+│   │   ├── login/
+│   │   ├── forgot-password/
+│   │   └── reset-password/
+│   ├── (public)/                 # Rotas públicas
+│   │   ├── blog/
+│   │   ├── events/
+│   │   ├── opportunities/
+│   │   ├── startups/
+│   │   └── store/
+│   ├── profile/                  # Área do usuário
+│   ├── api/                      # API Routes
+│   └── auth/callback/            # Callback de autenticação
+├── components/                   # Componentes React
+│   ├── features/                 # Componentes por feature
+│   │   ├── blog/
+│   │   ├── events/
+│   │   ├── opportunities/
+│   │   ├── profile/
+│   │   └── startups/
+│   ├── layout/                   # Componentes de layout
+│   └── ui/                       # Componentes shadcn/ui
+├── lib/                          # Utilitários e configurações
+│   ├── supabase/                 # Clientes Supabase
+│   ├── utils/                    # Funções utilitárias
+│   └── validations/              # Schemas Zod
+├── types/                        # Tipos TypeScript
+├── supabase/                     # Migrations e configurações
+│   └── migrations/
+└── public/                       # Arquivos estáticos
+```
 
-## Deploy on Vercel
+## 🔐 Autenticação
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+O projeto suporta dois métodos de autenticação:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Email e Senha**: Login tradicional
+2. **Magic Link**: Link enviado por email (sem senha)
+
+### Fluxos de autenticação:
+
+- **Login**: `/login` → autenticação → `/profile`
+- **Magic Link**: `/login` → email → `/auth/callback` → `/profile`
+- **Recuperação de senha**: `/forgot-password` → email → `/reset-password` → `/profile`
+
+## 👤 Área do Usuário
+
+A área de perfil (`/profile`) possui 4 tabs:
+
+1. **Minhas Informações**: Dados pessoais e avatar
+2. **Minha Startup**: Cadastro e edição da startup
+3. **Oportunidades**: O que o usuário está buscando
+4. **Segurança**: Trocar senha e deletar conta
+
+## 🗄️ Banco de Dados
+
+### Tabelas principais:
+
+- `profiles`: Perfis dos usuários
+- `startups`: Startups cadastradas
+- `events`: Eventos da comunidade
+- `blog_posts`: Posts do blog
+- `opportunities`: Oportunidades (investimentos, editais, vagas, etc)
+- `partners`: Parceiros da comunidade
+- `store_products`: Produtos da lojinha
+
+### Storage Buckets:
+
+- `avatars`: Fotos de perfil
+- `logos`: Logos de startups
+- `pitch-decks`: Pitch decks (público)
+- `events`: Imagens de eventos
+- `blog`: Imagens de posts
+- `products`: Imagens de produtos
+
+## 🎨 Componentes UI
+
+O projeto usa shadcn/ui com os seguintes componentes:
+
+- Button, Card, Input, Label, Tabs
+- Avatar, Badge, Carousel
+- Alert Dialog, Dialog, Dropdown Menu
+- Skeleton (loading states)
+- Toast (notificações)
+
+## 🚀 Deploy
+
+### Vercel (Recomendado)
+
+1. Faça push do código para o GitHub
+2. Importe o projeto no Vercel
+3. Configure as variáveis de ambiente
+4. Deploy automático!
+
+### Variáveis de ambiente para produção:
+
+Adicione as mesmas variáveis do `.env.local` no painel do Vercel.
+
+Não esqueça de adicionar as URLs de produção no Supabase:
+
+**Site URL:**
+
+```
+https://seu-dominio.vercel.app
+```
+
+**Redirect URLs:**
+
+```
+https://seu-dominio.vercel.app
+https://seu-dominio.vercel.app/auth/callback
+```
+
+## 📝 Licença
+
+Este projeto é privado e pertence à comunidade Monólitos Valley.
+
+## 🤝 Contribuindo
+
+1. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+2. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+3. Push para a branch (`git push origin feature/AmazingFeature`)
+4. Abra um Pull Request
+
+## 📧 Contato
+
+Monólitos Valley - [@monolitosvalley](https://instagram.com/monolitosvalley)
+
+---
+
+Feito com ❤️ pela comunidade Monólitos Valley
