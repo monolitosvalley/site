@@ -15,6 +15,7 @@ export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
         title: '',
         description: '',
         category: '',
+        type: '',
         deadline: '',
     })
     const supabase = createClient()
@@ -31,6 +32,7 @@ export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
                 title: formData.title,
                 description: formData.description,
                 category: formData.category,
+                type: formData.type,
                 deadline: formData.deadline,
                 created_by: user.id,
                 approved: false,
@@ -39,7 +41,7 @@ export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
             if (error) throw error
 
             toast.success('Oportunidade criada com sucesso!')
-            setFormData({ title: '', description: '', category: '', deadline: '' })
+            setFormData({ title: '', description: '', category: '', type: '', deadline: '' })
             onSuccess()
         } catch (error) {
             toast.error('Erro ao criar oportunidade')
@@ -74,6 +76,12 @@ export function OpportunityForm({ onSuccess }: { onSuccess: () => void }) {
                         placeholder="Categoria (ex: Investimento, Mentoria, Parceria)"
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        required
+                    />
+                    <Input
+                        placeholder="Tipo (ex: vaga, bolsa, mentoria)"
+                        value={formData.type}
+                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                         required
                     />
                     <Input

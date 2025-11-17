@@ -17,7 +17,6 @@ const TABS: { value: OpportunityType; label: string; requiresAuth: boolean }[] =
     { value: 'Edital', label: 'Editais', requiresAuth: false },
     { value: 'InovacaoAberta', label: 'Inovação Aberta', requiresAuth: false },
     { value: 'Beneficio', label: 'Clube de Benefícios', requiresAuth: false },
-    { value: 'Talento', label: 'Talentos', requiresAuth: true },
     { value: 'Vaga', label: 'Vagas', requiresAuth: true },
 ]
 
