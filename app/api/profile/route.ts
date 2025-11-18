@@ -84,6 +84,118 @@ export async function GET() {
   }
 }
 
+// PATCH para atualização parcial (apenas campos enviados)
+export async function PATCH(request: NextRequest) {
+  try {
+    const supabase = await createClient()
+    const {
+      data: { user },
+      error: authError
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Não autenticado" }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const { profile: profileData, startup: startupData } = body
+
+    const serviceClient = await createServiceClient()
+    let updatedProfile = null
+    let updatedStartup = null
+
+    // Update profile if provided (partial update)
+    if (profileData) {
+      try {
+        // Não valida, apenas filtra campos vazios
+        const cleanData = Object.fromEntries(
+          Object.entries(profileData).filter(([_, v]) => v !== undefined)
+        )
+
+        const { data, error: profileError } = await serviceClient
+          .from("profiles")
+          .update(cleanData)
+          .eq("id", user.id)
+          .select()
+          .single()
+
+        if (profileError) {
+          console.error("Profile update error:", profileError)
+          return NextResponse.json(
+            { error: "Erro ao atualizar perfil" },
+            { status: 500 }
+          )
+        }
+
+        updatedProfile = data
+      } catch (error: any) {
+        console.error("❌ Profile update error:", error)
+        return NextResponse.json(
+          { error: "Erro ao atualizar perfil" },
+          { status: 500 }
+        )
+      }
+    }
+
+    // Update startup if provided (partial update)
+    if (startupData) {
+      try {
+        const cleanData = Object.fromEntries(
+          Object.entries(startupData).filter(([_, v]) => v !== undefined)
+        )
+
+        const { data: existingStartup } = await serviceClient
+          .from("startups")
+          .select("id")
+          .eq("owner_id", user.id)
+          .maybeSingle()
+
+        if (existingStartup) {
+          const { data, error: startupError } = await serviceClient
+            .from("startups")
+            .update(cleanData)
+            .eq("owner_id", user.id)
+            .select()
+            .single()
+
+          if (startupError) {
+            console.error("Startup update error:", startupError)
+            return NextResponse.json(
+              { error: "Erro ao atualizar startup" },
+              { status: 500 }
+            )
+          }
+
+          updatedStartup = data
+        } else {
+          return NextResponse.json(
+            { error: "Startup não encontrada. Use PUT para criar." },
+            { status: 404 }
+          )
+        }
+      } catch (error: any) {
+        console.error("❌ Startup update error:", error)
+        return NextResponse.json(
+          { error: "Erro ao atualizar startup" },
+          { status: 500 }
+        )
+      }
+    }
+
+    return NextResponse.json({
+      profile: updatedProfile,
+      startup: updatedStartup
+    })
+  } catch (error) {
+    console.error("❌ Unexpected error:", error)
+    return NextResponse.json(
+      { error: "Erro interno do servidor" },
+      { status: 500 }
+    )
+  }
+}
+
+// PUT para atualização completa (com validação)
 export async function PUT(request: NextRequest) {
   try {
     const supabase = await createClient()
