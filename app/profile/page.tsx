@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Profile, Startup } from '@/types/database'
+import { Profile, Startup, TeamMember } from '@/types/database'
 import { ProfileForm } from '@/components/features/profile/ProfileForm'
 import { AvatarUpload } from '@/components/features/profile/AvatarUpload'
 import { SeekingForm } from '@/components/features/profile/SeekingForm'
 import { SecurityForm } from '@/components/features/profile/SecurityForm'
 import { StartupForm } from '@/components/features/startups/StartupForm'
+import { TeamMembersForm } from '@/components/features/startups/TeamMembersForm'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
@@ -15,6 +16,7 @@ import { Toaster } from 'sonner'
 export default function ProfilePage() {
     const [profile, setProfile] = useState<Profile | null>(null)
     const [startup, setStartup] = useState<Startup | null>(null)
+    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
     const [loading, setLoading] = useState(true)
 
     const fetchProfile = async () => {
@@ -24,6 +26,15 @@ export default function ProfilePage() {
                 const data = await res.json()
                 setProfile(data.profile)
                 setStartup(data.startup)
+
+                // Fetch team members if startup exists
+                if (data.startup?.id) {
+                    const membersRes = await fetch(`/api/team-members?startupId=${data.startup.id}`)
+                    if (membersRes.ok) {
+                        const membersData = await membersRes.json()
+                        setTeamMembers(membersData.data || [])
+                    }
+                }
             }
         } catch (error) {
             console.error('Error fetching profile:', error)
@@ -117,7 +128,7 @@ export default function ProfilePage() {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="startup" className="mt-6">
+                    <TabsContent value="startup" className="mt-6 space-y-6">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Informações da Startup</CardTitle>
@@ -131,6 +142,24 @@ export default function ProfilePage() {
                                 <StartupForm startup={startup} onSuccess={fetchProfile} />
                             </CardContent>
                         </Card>
+
+                        {startup && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Membros do Time</CardTitle>
+                                    <CardDescription>
+                                        Gerencie os membros do seu time
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <TeamMembersForm
+                                        startupId={startup.id}
+                                        members={teamMembers}
+                                        onMembersChange={setTeamMembers}
+                                    />
+                                </CardContent>
+                            </Card>
+                        )}
                     </TabsContent>
 
                     <TabsContent value="seeking" className="mt-6">

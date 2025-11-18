@@ -25,7 +25,7 @@ export function Navbar({ user }: NavbarProps) {
     ]
 
     return (
-        <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <nav className="sticky top-0 z-50 w-full border-b border-stone-300 bg-white shadow-sm">
             <div className="container mx-auto px-4 flex h-16 items-center justify-between">
                 <div className="flex items-center">
                     <Link href="/" className="flex items-center">
@@ -56,7 +56,7 @@ export function Navbar({ user }: NavbarProps) {
                                 key={link.href}
                                 href={link.href}
                                 prefetch={false}
-                                className="text-sm font-medium transition-colors hover:text-primary"
+                                className="text-sm font-medium text-stone-700 transition-colors hover:text-amber-600"
                             >
                                 {link.label}
                             </Link>
@@ -89,14 +89,14 @@ export function Navbar({ user }: NavbarProps) {
 
             {/* Mobile Navigation Menu */}
             {isOpen && (
-                <div className="md:hidden border-t bg-background">
+                <div className="md:hidden border-t border-stone-300 bg-white">
                     <div className="container mx-auto px-4 py-4 space-y-2">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 prefetch={false}
-                                className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+                                className="block px-4 py-2 text-sm font-medium text-stone-700 rounded-md hover:bg-amber-50 hover:text-amber-600 transition-colors"
                                 onClick={() => setIsOpen(false)}
                             >
                                 {link.label}

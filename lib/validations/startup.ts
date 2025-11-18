@@ -46,6 +46,7 @@ export const startupSchema = z.object({
   tecnologias: z.array(z.string()).optional(),
   tem_esg: z.boolean().default(false),
   detalhes_esg: z.string().optional(),
+  cnpj: z.string().optional().or(z.literal("")),
   logo_url: z.string().url("URL inválida").optional().or(z.literal("")),
   pitch_deck_url: z.string().url("URL inválida").optional().or(z.literal(""))
 })

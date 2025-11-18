@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Instagram, Linkedin, MessageCircle } from 'lucide-react'
+import { Instagram, Linkedin } from 'lucide-react'
 
 export function Footer() {
     const currentYear = new Date().getFullYear()
@@ -16,15 +16,10 @@ export function Footer() {
             href: 'https://linkedin.com/company/monolitosvalley',
             label: 'LinkedIn',
         },
-        {
-            icon: MessageCircle,
-            href: process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL || '#',
-            label: 'WhatsApp',
-        },
     ]
 
     return (
-        <footer className="border-t bg-background">
+        <footer className="border-t border-stone-300 bg-stone-900 text-white">
             <div className="container mx-auto px-4 py-12">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
                     <div className="space-y-3">
@@ -46,12 +41,12 @@ export function Footer() {
                                 className="h-10 hidden md:block"
                             />
                         </Link>
-                        <p className="text-sm text-muted-foreground max-w-xs">
+                        <p className="text-sm text-stone-400 max-w-xs">
                             Ecossistema de inovação do Sertão Central Cearense
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-6">
                         {socialLinks.map((social) => {
                             const Icon = social.icon
                             return (
@@ -60,7 +55,7 @@ export function Footer() {
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-muted-foreground hover:text-primary transition-colors"
+                                    className="text-stone-400 hover:text-amber-400 transition-colors"
                                     aria-label={social.label}
                                 >
                                     <Icon className="h-5 w-5" />
@@ -70,8 +65,21 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-                    <p>&copy; {currentYear} Monólitos Valley. Todos os direitos reservados.</p>
+                <div className="mt-8 border-t border-stone-700 pt-8">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-stone-400">
+                        <p>&copy; {currentYear} Monólitos Valley. Todos os direitos reservados.</p>
+                        <div className="flex flex-wrap gap-4 justify-center">
+                            <Link href="/privacy" className="hover:text-amber-400 transition-colors">
+                                Privacidade
+                            </Link>
+                            <Link href="/terms" className="hover:text-amber-400 transition-colors">
+                                Termos de Uso
+                            </Link>
+                            <Link href="/cookies" className="hover:text-amber-400 transition-colors">
+                                Cookies
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>

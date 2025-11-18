@@ -40,6 +40,8 @@ export interface Startup {
   tem_esg: boolean
   detalhes_esg: string | null
   pitch_deck_url: string | null
+  cnpj: string | null
+  slug: string | null
   approved: boolean
   created_at: string
   updated_at: string
@@ -114,4 +116,22 @@ export interface StoreProduct {
   external_link: string
   approved: boolean
   created_at: string
+}
+
+export interface TeamMember {
+  id: string
+  startup_id: string
+  full_name: string
+  photo_url: string | null
+  role: string
+  linkedin: string | null
+  github: string | null
+  behance: string | null
+  portfolio: string | null
+  lattes: string | null
+  instagram: string | null
+  outros: string | null
+  position_order: number
+  created_at: string
+  updated_at: string
 }

@@ -26,12 +26,20 @@ interface StartupFormProps {
 
 const SEGMENTOS = [
     'Agritech',
+    'Socialtech',
     'Edtech',
     'Fintech',
     'Healthtech',
     'Retailtech',
     'Logística',
     'Energia',
+    'Mobilidade',
+    'Turismo',
+    'Alimentação',
+    'Moda',
+    'Construção',
+    'Manufatura',
+    'Serviços',
     'Outro',
 ]
 
@@ -74,8 +82,8 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
             instagram: startup?.instagram || '',
             cidade: startup?.cidade || '',
             estado: startup?.estado || '',
+            cnpj: startup?.cnpj || '',
             tem_esg: startup?.tem_esg || false,
-            detalhes_esg: startup?.detalhes_esg || '',
         },
     })
 
@@ -190,6 +198,7 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
                 longitude: longitude || null,
                 cidade: cidade || data.cidade,
                 estado: estado || data.estado,
+                cnpj: data.cnpj || null,
             }
 
             const res = await fetch('/api/profile', {
@@ -251,6 +260,34 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
                 <Label htmlFor="name">Nome da Startup *</Label>
                 <Input id="name" {...register('name')} />
                 {errors.name && <p className="text-sm text-destructive">{String(errors.name.message)}</p>}
+            </div>
+
+            {/* CNPJ */}
+            <div className="space-y-2">
+                <Label htmlFor="cnpj">CNPJ (Opcional)</Label>
+                <Controller
+                    name="cnpj"
+                    control={control}
+                    render={({ field }) => (
+                        <Input
+                            id="cnpj"
+                            placeholder="00.000.000/0000-00"
+                            maxLength={18}
+                            value={field.value || ''}
+                            onChange={(e) => {
+                                const value = e.target.value.replace(/\D/g, '')
+                                let formatted = value
+                                if (value.length > 0) {
+                                    formatted = value.replace(/^(\d{2})(\d)/, '$1.$2')
+                                    formatted = formatted.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+                                    formatted = formatted.replace(/\.(\d{3})(\d)/, '.$1/$2')
+                                    formatted = formatted.replace(/(\d{4})(\d)/, '$1-$2')
+                                }
+                                field.onChange(formatted)
+                            }}
+                        />
+                    )}
+                />
             </div>
 
             {/* Descrição */}
@@ -474,17 +511,6 @@ export function StartupForm({ startup, onSuccess }: StartupFormProps) {
                         placeholder="CE"
                     />
                 </div>
-            </div>
-
-            {/* Detalhes ESG */}
-            <div className="space-y-2">
-                <Label htmlFor="detalhes_esg">Detalhes ESG (opcional)</Label>
-                <Textarea
-                    id="detalhes_esg"
-                    {...register('detalhes_esg')}
-                    placeholder="Descreva as práticas ESG da sua startup..."
-                    rows={3}
-                />
             </div>
 
             {/* Localização */}

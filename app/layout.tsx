@@ -4,6 +4,7 @@ import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { AuthRedirect, AuthHashHandler } from '@/components/auth/AuthHandlers'
+import { CookieConsent } from '@/components/CookieConsent'
 import { createClient } from '@/lib/supabase/server'
 import { Toaster } from 'sonner'
 import { Suspense } from 'react'
@@ -85,6 +86,7 @@ export default async function RootLayout({
           <Navbar user={user} />
           <main className="flex-1">{children}</main>
           <Footer />
+          <CookieConsent />
         </div>
       </body>
     </html>

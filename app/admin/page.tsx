@@ -157,27 +157,29 @@ export default function AdminPage() {
             </div>
 
             <Tabs defaultValue="create" className="w-full">
-                <TabsList>
-                    <TabsTrigger value="create">Criar Conteúdo</TabsTrigger>
-                    <TabsTrigger value="blog">
-                        Blog {pending.blog.length > 0 && <Badge className="ml-2">{pending.blog.length}</Badge>}
-                    </TabsTrigger>
-                    <TabsTrigger value="events">
-                        Eventos {pending.events.length > 0 && <Badge className="ml-2">{pending.events.length}</Badge>}
-                    </TabsTrigger>
-                    <TabsTrigger value="opportunities">
-                        Oportunidades {pending.opportunities.length > 0 && <Badge className="ml-2">{pending.opportunities.length}</Badge>}
-                    </TabsTrigger>
-                    <TabsTrigger value="partners">
-                        Parceiros {pending.partners.length > 0 && <Badge className="ml-2">{pending.partners.length}</Badge>}
-                    </TabsTrigger>
-                    <TabsTrigger value="products">
-                        Produtos {pending.products.length > 0 && <Badge className="ml-2">{pending.products.length}</Badge>}
-                    </TabsTrigger>
-                    <TabsTrigger value="startups">
-                        Startups {pending.startups.length > 0 && <Badge className="ml-2">{pending.startups.length}</Badge>}
-                    </TabsTrigger>
-                </TabsList>
+                <div className="flex justify-center mb-6">
+                    <TabsList className="flex-wrap h-auto">
+                        <TabsTrigger value="create">Criar Conteúdo</TabsTrigger>
+                        <TabsTrigger value="blog">
+                            Blog {pending.blog.length > 0 && <Badge className="ml-2">{pending.blog.length}</Badge>}
+                        </TabsTrigger>
+                        <TabsTrigger value="events">
+                            Eventos {pending.events.length > 0 && <Badge className="ml-2">{pending.events.length}</Badge>}
+                        </TabsTrigger>
+                        <TabsTrigger value="opportunities">
+                            Oportunidades {pending.opportunities.length > 0 && <Badge className="ml-2">{pending.opportunities.length}</Badge>}
+                        </TabsTrigger>
+                        <TabsTrigger value="partners">
+                            Parceiros {pending.partners.length > 0 && <Badge className="ml-2">{pending.partners.length}</Badge>}
+                        </TabsTrigger>
+                        <TabsTrigger value="products">
+                            Produtos {pending.products.length > 0 && <Badge className="ml-2">{pending.products.length}</Badge>}
+                        </TabsTrigger>
+                        <TabsTrigger value="startups">
+                            Startups {pending.startups.length > 0 && <Badge className="ml-2">{pending.startups.length}</Badge>}
+                        </TabsTrigger>
+                    </TabsList>
+                </div>
 
                 <TabsContent value="create" className="mt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

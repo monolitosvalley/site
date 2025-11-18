@@ -5,7 +5,6 @@ import { Opportunity } from '@/types/database'
 import { OpportunityTabs } from '@/components/features/opportunities/OpportunityTabs'
 import { OpportunityCard } from '@/components/features/opportunities/OpportunityCard'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2, Calendar as CalendarIcon } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -76,47 +75,63 @@ export default function OpportunitiesPage() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <div className="mb-8">
-                <h1 className="text-4xl font-bold mb-2">Oportunidades</h1>
-                <p className="text-muted-foreground">
-                    Explore investimentos, editais, vagas e benefícios da comunidade
-                </p>
+            {/* Header com filtros */}
+            <div className="mb-8 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                <div>
+                    <h1 className="text-4xl font-bold mb-2">Oportunidades</h1>
+                    <p className="text-muted-foreground">
+                        Explore investimentos, editais, vagas e benefícios da comunidade
+                    </p>
+                </div>
+
+                {/* Toggle de visualização */}
+                <div className="flex gap-2">
+                    <Button
+                        variant={viewMode === 'tabs' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setViewMode('tabs')}
+                        className={viewMode === 'tabs' ? 'bg-amber-600 hover:bg-amber-700' : ''}
+                    >
+                        Por Categoria
+                    </Button>
+                    <Button
+                        variant={viewMode === 'calendar' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setViewMode('calendar')}
+                        className={viewMode === 'calendar' ? 'bg-amber-600 hover:bg-amber-700' : ''}
+                    >
+                        <CalendarIcon className="h-4 w-4 mr-2" />
+                        Por Prazo
+                    </Button>
+                </div>
             </div>
 
-            <Tabs value={viewMode} onValueChange={(value: any) => setViewMode(value)} className="w-full">
-                <TabsList>
-                    <TabsTrigger value="tabs">Por Categoria</TabsTrigger>
-                    <TabsTrigger value="calendar">Por Prazo</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="tabs" className="mt-6">
-                    <OpportunityTabs opportunities={opportunities} isAuthenticated={isAuthenticated} />
-                </TabsContent>
-
-                <TabsContent value="calendar" className="mt-6">
-                    {opportunitiesWithDeadline.length === 0 ? (
-                        <div className="text-center py-12">
-                            <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                            <p className="text-muted-foreground">
-                                Nenhuma oportunidade com prazo definido no momento
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="space-y-8">
-                            {Object.entries(groupedOpportunities).map(([month, monthOpps]) => (
-                                <div key={month}>
-                                    <h2 className="text-2xl font-bold mb-4 capitalize">{month}</h2>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                        {monthOpps.map((opportunity) => (
-                                            <OpportunityCard key={opportunity.id} opportunity={opportunity} />
-                                        ))}
-                                    </div>
+            {/* Conteúdo */}
+            {viewMode === 'tabs' ? (
+                <OpportunityTabs opportunities={opportunities} isAuthenticated={isAuthenticated} />
+            ) : (
+                opportunitiesWithDeadline.length === 0 ? (
+                    <div className="text-center py-12">
+                        <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                            Nenhuma oportunidade com prazo definido no momento
+                        </p>
+                    </div>
+                ) : (
+                    <div className="space-y-8">
+                        {Object.entries(groupedOpportunities).map(([month, monthOpps]) => (
+                            <div key={month}>
+                                <h2 className="text-2xl font-bold mb-4 capitalize">{month}</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {monthOpps.map((opportunity) => (
+                                        <OpportunityCard key={opportunity.id} opportunity={opportunity} />
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    )}
-                </TabsContent>
-            </Tabs>
+                            </div>
+                        ))}
+                    </div>
+                )
+            )}
         </div>
     )
 }

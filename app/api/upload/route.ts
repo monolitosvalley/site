@@ -18,6 +18,7 @@ type BucketName =
   | "events"
   | "blog"
   | "products"
+  | "team-members"
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,7 +59,8 @@ export async function POST(request: NextRequest) {
       "pitch-decks",
       "events",
       "blog",
-      "products"
+      "products",
+      "team-members"
     ]
     if (!validBuckets.includes(bucket)) {
       return NextResponse.json({ error: "Bucket inválido" }, { status: 400 })

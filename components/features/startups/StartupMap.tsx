@@ -6,11 +6,23 @@ import { Icon, LatLngExpression } from 'leaflet'
 import { Startup } from '@/types/database'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { MapPin, Calendar, Globe, FileText, Leaf, TrendingUp, Camera, ExternalLink } from 'lucide-react'
+import { formatCNPJ } from '@/lib/utils'
 import Link from 'next/link'
 import 'leaflet/dist/leaflet.css'
 
 interface StartupMapProps {
     startups: Startup[]
+}
+
+const ESTAGIO_LABELS: Record<string, string> = {
+    ideia: 'Ideação',
+    validacao: 'Validação',
+    mvp: 'MVP',
+    tracao: 'Tração',
+    escala: 'Escala',
+    crescimento: 'Crescimento',
 }
 
 // Fix for default marker icon
@@ -95,29 +107,124 @@ export function StartupMap({ startups }: StartupMapProps) {
                         position={[startup.latitude!, startup.longitude!]}
                         icon={createCustomIcon()}
                     >
-                        <Popup>
-                            <div className="p-2 min-w-[200px]">
-                                <h3 className="font-semibold text-lg mb-2">{startup.name}</h3>
-                                <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-                                    {startup.description}
-                                </p>
-                                <div className="flex flex-wrap gap-1 mb-2">
-                                    <Badge variant="secondary" className="text-xs">
-                                        {startup.segmento}
-                                    </Badge>
-                                    <Badge variant="outline" className="text-xs">
-                                        {startup.estagio_maturidade}
-                                    </Badge>
+                        <Popup maxWidth={400} className="startup-popup">
+                            <div className="p-3 min-w-[350px] max-w-[400px]">
+                                {/* Header */}
+                                <div className="mb-3">
+                                    <h3 className="font-bold text-lg mb-1">{startup.name}</h3>
+                                    {startup.cnpj && (
+                                        <p className="text-xs text-stone-600 mb-2">CNPJ: {formatCNPJ(startup.cnpj)}</p>
+                                    )}
+                                    <div className="flex flex-wrap gap-1">
+                                        <Badge className="bg-amber-100 text-amber-800 border border-amber-300 text-xs">
+                                            {startup.segmento}
+                                        </Badge>
+                                        <Badge className="bg-blue-100 text-blue-800 border border-blue-300 text-xs">
+                                            <TrendingUp className="w-2.5 h-2.5 mr-1" />
+                                            {ESTAGIO_LABELS[startup.estagio_maturidade] || startup.estagio_maturidade}
+                                        </Badge>
+                                        {startup.tem_esg && (
+                                            <Badge className="bg-green-100 text-green-800 border border-green-300 text-xs">
+                                                <Leaf className="w-2.5 h-2.5 mr-1" />
+                                                ESG
+                                            </Badge>
+                                        )}
+                                    </div>
                                 </div>
-                                <p className="text-xs text-muted-foreground mb-2">
-                                    📍 {startup.cidade}, {startup.estado}
-                                </p>
-                                <Link
-                                    href={`/startups?name=${startup.name}`}
-                                    className="text-xs text-primary hover:underline"
-                                >
-                                    Ver detalhes →
-                                </Link>
+
+                                {/* Descrição */}
+                                {startup.description && (
+                                    <div className="border-l-3 border-amber-500 pl-3 mb-3">
+                                        <p className="text-xs text-stone-700 line-clamp-3">{startup.description}</p>
+                                    </div>
+                                )}
+
+
+
+                                {/* Tecnologias */}
+                                {startup.tecnologias && startup.tecnologias.length > 0 && (
+                                    <div className="mb-3">
+                                        <p className="text-xs font-semibold mb-1">Tecnologias</p>
+                                        <div className="flex flex-wrap gap-1">
+                                            {startup.tecnologias.slice(0, 5).map((tech) => (
+                                                <Badge key={tech} variant="outline" className="text-xs py-0">
+                                                    {tech}
+                                                </Badge>
+                                            ))}
+                                            {startup.tecnologias.length > 5 && (
+                                                <Badge variant="outline" className="text-xs py-0">
+                                                    +{startup.tecnologias.length - 5}
+                                                </Badge>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Links */}
+                                {(startup.website || startup.linkedin || startup.instagram || startup.pitch_deck_url) && (
+                                    <div className="mb-3">
+                                        <p className="text-xs font-semibold text-stone-700 mb-2">Redes e Links</p>
+                                        <div className="flex items-center gap-2">
+                                            {startup.website && (
+                                                <Link
+                                                    href={startup.website}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-colors"
+                                                    title="Website"
+                                                >
+                                                    <Globe className="h-4 w-4 text-blue-600" />
+                                                </Link>
+                                            )}
+                                            {startup.linkedin && (
+                                                <Link
+                                                    href={startup.linkedin}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-colors"
+                                                    title="LinkedIn"
+                                                >
+                                                    <TrendingUp className="h-4 w-4 text-blue-600" />
+                                                </Link>
+                                            )}
+                                            {startup.instagram && (
+                                                <Link
+                                                    href={startup.instagram}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-200 transition-colors"
+                                                    title="Instagram"
+                                                >
+                                                    <Camera className="h-4 w-4 text-pink-600" />
+                                                </Link>
+                                            )}
+                                            {startup.pitch_deck_url && (
+                                                <Link
+                                                    href={`/api/pitch-deck/${startup.owner_id}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-50 hover:bg-orange-100 border border-orange-200 transition-colors"
+                                                    title="Pitch Deck"
+                                                >
+                                                    <FileText className="h-4 w-4 text-orange-600" />
+                                                </Link>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* CTA Button */}
+                                {startup.slug && (
+                                    <Link
+                                        href={`/startups/${startup.slug}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-center gap-2 w-full bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg px-4 py-2.5 transition-all hover:shadow-md"
+                                    >
+                                        <ExternalLink className="h-4 w-4 text-white" />
+                                        <span className="text-white">Abrir mais detalhes</span>
+                                    </Link>
+                                )}
                             </div>
                         </Popup>
                     </Marker>

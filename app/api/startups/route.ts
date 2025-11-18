@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server"
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
+    const slug = searchParams.get("slug")
     const segmento = searchParams.get("segmento")
     const estagio_maturidade = searchParams.get("estagio_maturidade")
     const is_esg = searchParams.get("is_esg")
@@ -11,6 +12,25 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10")
 
     const supabase = await createServiceClient()
+
+    // If slug is provided, fetch single startup
+    if (slug) {
+      const { data, error } = await supabase
+        .from("startups")
+        .select("*")
+        .eq("slug", slug)
+        .single()
+
+      if (error) {
+        console.error("Startup fetch error:", error)
+        return NextResponse.json(
+          { error: "Startup não encontrada" },
+          { status: 404 }
+        )
+      }
+
+      return NextResponse.json({ data: [data] })
+    }
 
     let query = supabase.from("startups").select("*", { count: "exact" })
 

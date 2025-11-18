@@ -26,8 +26,8 @@ export function OpportunityTabs({ opportunities, isAuthenticated }: OpportunityT
     }
 
     return (
-        <Tabs defaultValue="investidor" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
+        <Tabs defaultValue="investimento" className="w-full">
+            <TabsList className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-6">
                 {TABS.map((tab) => (
                     <TabsTrigger key={tab.value} value={tab.value} className="gap-2">
                         {tab.requiresAuth && !isAuthenticated && <Lock className="w-3 h-3" />}
