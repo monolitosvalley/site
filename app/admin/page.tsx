@@ -30,12 +30,14 @@ export default function AdminPage() {
         opportunities: PendingItem[]
         partners: PendingItem[]
         products: PendingItem[]
+        startups: PendingItem[]
     }>({
         blog: [],
         events: [],
         opportunities: [],
         partners: [],
         products: [],
+        startups: [],
     })
     const router = useRouter()
     const supabase = createClient()
@@ -78,12 +80,13 @@ export default function AdminPage() {
     async function fetchPending() {
         const supabase = createClient()
 
-        const [blog, events, opportunities, partners, products] = await Promise.all([
+        const [blog, events, opportunities, partners, products, startups] = await Promise.all([
             supabase.from('blog_posts').select('id, title, created_at').eq('approved', false),
             supabase.from('events').select('id, title, created_at').eq('approved', false),
             supabase.from('opportunities').select('id, title, type, created_at').eq('approved', false),
             supabase.from('partners').select('id, name, created_at').eq('approved', false),
             supabase.from('store_products').select('id, name, created_at').eq('approved', false),
+            supabase.from('startups').select('id, name, created_at').eq('approved', false),
         ])
 
         setPending({
@@ -92,6 +95,7 @@ export default function AdminPage() {
             opportunities: (opportunities.data || []).map((item: any) => ({ ...item, title: item.title, type: item.type, itemType: 'opportunity' })),
             partners: (partners.data || []).map((item: any) => ({ ...item, title: item.name, itemType: 'partner' })),
             products: (products.data || []).map((item: any) => ({ ...item, title: item.name, itemType: 'product' })),
+            startups: (startups.data || []).map((item: any) => ({ ...item, title: item.name, itemType: 'startup' })),
         })
     }
 
@@ -169,6 +173,9 @@ export default function AdminPage() {
                     </TabsTrigger>
                     <TabsTrigger value="products">
                         Produtos {pending.products.length > 0 && <Badge className="ml-2">{pending.products.length}</Badge>}
+                    </TabsTrigger>
+                    <TabsTrigger value="startups">
+                        Startups {pending.startups.length > 0 && <Badge className="ml-2">{pending.startups.length}</Badge>}
                     </TabsTrigger>
                 </TabsList>
 

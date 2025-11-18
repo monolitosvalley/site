@@ -1,13 +1,20 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { User } from '@supabase/supabase-js'
 import { AuthButton } from './AuthButton'
+import { Menu, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface NavbarProps {
     user: User | null
 }
 
 export function Navbar({ user }: NavbarProps) {
+    const [isOpen, setIsOpen] = useState(false)
+
     const navLinks = [
         { href: '/', label: 'Início' },
         { href: '/startups', label: 'Startups' },
@@ -19,10 +26,10 @@ export function Navbar({ user }: NavbarProps) {
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container mx-auto px-4 flex h-16 items-center">
-                <div className="mr-4 flex">
-                    <Link href="/" className="mr-6 flex items-center">
-                        {/* Mobile logo - just the M */}
+            <div className="container mx-auto px-4 flex h-16 items-center justify-between">
+                <div className="flex items-center">
+                    <Link href="/" className="flex items-center">
+                        {/* Mobile logo */}
                         <Image
                             src="/monolitos-valley-logo.svg"
                             alt="Monólitos Valley"
@@ -30,7 +37,7 @@ export function Navbar({ user }: NavbarProps) {
                             height={32}
                             className="h-8 w-8 md:hidden"
                         />
-                        {/* Desktop logo - full title */}
+                        {/* Desktop logo */}
                         <Image
                             src="/monolitos-valley-logo-title.svg"
                             alt="Monólitos Valley"
@@ -40,22 +47,64 @@ export function Navbar({ user }: NavbarProps) {
                         />
                     </Link>
                 </div>
-                <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex flex-1 items-center justify-center gap-6">
                     <nav className="flex items-center space-x-6">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 prefetch={false}
-                                className="text-sm font-medium transition-colors hover:text-primary hidden md:inline-block"
+                                className="text-sm font-medium transition-colors hover:text-primary"
                             >
                                 {link.label}
                             </Link>
                         ))}
                     </nav>
+                </div>
+
+                {/* Desktop Auth Button */}
+                <div className="hidden md:flex">
                     <AuthButton user={user} />
                 </div>
+
+                {/* Mobile Menu Button */}
+                <div className="md:hidden flex items-center gap-2">
+                    <AuthButton user={user} />
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="h-10 w-10"
+                    >
+                        {isOpen ? (
+                            <X className="h-5 w-5" />
+                        ) : (
+                            <Menu className="h-5 w-5" />
+                        )}
+                    </Button>
+                </div>
             </div>
+
+            {/* Mobile Navigation Menu */}
+            {isOpen && (
+                <div className="md:hidden border-t bg-background">
+                    <div className="container mx-auto px-4 py-4 space-y-2">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                prefetch={false}
+                                className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
         </nav>
     )
 }
