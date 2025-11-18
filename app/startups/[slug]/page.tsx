@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const title = `${startup.name} | Monólitos Valley`
     const description = startup.description || `Conheça ${startup.name}, startup de ${startup.segmento}`
-    const imageUrl = startup.logo_url || 'https://monolitos-valley-portal.vercel.app/og-image.png'
+    const imageUrl = startup.logo_url || 'https://monolitos-valley-portal.vercel.app/monolitos-valley-logo-title.svg'
 
     return {
         title,

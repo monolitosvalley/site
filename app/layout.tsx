@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import './globals-map.css'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { AuthRedirect, AuthHashHandler } from '@/components/auth/AuthHandlers'
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
     description: 'Comunidade de startups, inovação e oportunidades no Sertão Central Cearense',
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://monolitosvalley.com.br'}/monolitos-valley-og.png`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://monolitosvalley.com.br'}/monolitos-valley-logo-title.svg`,
         width: 1200,
         height: 630,
         alt: 'Monólitos Valley',
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Monólitos Valley - Ecossistema de Inovação',
     description: 'Comunidade de startups e inovação do Sertão Central Cearense',
-    images: [`${process.env.NEXT_PUBLIC_SITE_URL || 'https://monolitosvalley.com.br'}/monolitos-valley-og.png`],
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL || 'https://monolitosvalley.com.br'}/monolitos-valley-logo-title.svg`],
     creator: '@monolitosvalley',
   },
   alternates: {

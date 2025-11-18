@@ -25,16 +25,14 @@ const ESTAGIO_LABELS: Record<string, string> = {
     crescimento: 'Crescimento',
 }
 
-// Fix for default marker icon
+// Custom marker icon usando o logo do Monólitos Valley
 const createCustomIcon = () => {
     return new Icon({
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41],
+        iconUrl: '/monolitos-valley-logo.svg',
+        iconSize: [32, 32], // Tamanho menor para ter espaço do padding
+        iconAnchor: [24, 48], // Ajustado para o centro do círculo maior
+        popupAnchor: [0, -48],
+        className: 'custom-marker-icon'
     })
 }
 

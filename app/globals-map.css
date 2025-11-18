@@ -1,0 +1,17 @@
+/* Custom marker styles */
+.custom-marker-icon {
+  background: white !important;
+  border: 2px solid #d97706 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06) !important;
+  padding: 4px !important;
+}
+
+.custom-marker-icon:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  border-color: #b45309 !important;
+}
+
+.leaflet-popup-close-button {
+  margin: 10px;
+}
