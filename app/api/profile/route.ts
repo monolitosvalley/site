@@ -183,8 +183,19 @@ export async function PUT(request: NextRequest) {
     })
   } catch (error) {
     if (error instanceof Error && error.name === "ZodError") {
+      // Parse Zod errors para mensagens amigáveis
+      const zodError = error as any
+      const firstError = zodError.errors?.[0]
+      const friendlyMessage = firstError?.message || "Dados inválidos"
+
+      console.error("❌ Validation error:", zodError.errors)
+
       return NextResponse.json(
-        { error: "Dados inválidos", details: error },
+        {
+          error: friendlyMessage,
+          field: firstError?.path?.[0],
+          details: zodError.errors
+        },
         { status: 400 }
       )
     }

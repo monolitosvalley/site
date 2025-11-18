@@ -67,7 +67,7 @@ export default function LoginPage() {
         <div className="flex min-h-screen items-center justify-center p-4">
             <Card className="w-full max-w-md">
                 <CardHeader>
-                    <CardTitle>Bem-vindo ao Portal Monólitos Valley</CardTitle>
+                    <CardTitle>Bem-vindx!</CardTitle>
                     <CardDescription>
                         Faça login para acessar sua conta e gerenciar seu perfil
                     </CardDescription>

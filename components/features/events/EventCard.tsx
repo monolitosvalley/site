@@ -20,7 +20,7 @@ export function EventCard({ event, variant = 'list' }: EventCardProps) {
 
     if (variant === 'carousel') {
         return (
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col pt-0">
                 {event.image_url && (
                     <div className="relative h-56 w-full overflow-hidden bg-stone-200">
                         <Image
