@@ -1,18 +1,37 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { Instagram, Linkedin, MessageCircle } from 'lucide-react'
 
 export function Footer() {
     const currentYear = new Date().getFullYear()
 
+    const socialLinks = [
+        {
+            icon: Instagram,
+            href: 'https://instagram.com/monolitosvalley',
+            label: 'Instagram',
+        },
+        {
+            icon: Linkedin,
+            href: 'https://linkedin.com/company/monolitosvalley',
+            label: 'LinkedIn',
+        },
+        {
+            icon: MessageCircle,
+            href: process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL || '#',
+            label: 'WhatsApp',
+        },
+    ]
+
     return (
         <footer className="border-t bg-background">
-            <div className="container mx-auto px-4 py-8 md:py-12">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+            <div className="container mx-auto px-4 py-12">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
                     <div className="space-y-3">
-                        <Link href="/" className="flex items-center gap-2">
+                        <Link href="/" className="flex items-center">
                             {/* Mobile logo */}
                             <Image
-                                src="/monolitos-valley-logo-small.svg"
+                                src="/monolitos-valley-logo.svg"
                                 alt="Monólitos Valley"
                                 width={32}
                                 height={32}
@@ -20,88 +39,34 @@ export function Footer() {
                             />
                             {/* Desktop logo */}
                             <Image
-                                src="/monolitos-valley-logo.svg"
+                                src="/monolitos-valley-logo-title.svg"
                                 alt="Monólitos Valley"
-                                width={40}
+                                width={160}
                                 height={40}
-                                className="h-10 w-10 hidden md:block"
+                                className="h-10 hidden md:block"
                             />
                         </Link>
-                        <p className="text-sm text-muted-foreground">
-                            Comunidade de Startups do Sertão Central Cearense                        </p>
+                        <p className="text-sm text-muted-foreground max-w-xs">
+                            Ecossistema de inovação do Sertão Central Cearense
+                        </p>
                     </div>
 
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-semibold">Navegação</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <Link href="/startups" className="text-muted-foreground hover:text-primary">
-                                    Startups
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/events" className="text-muted-foreground hover:text-primary">
-                                    Eventos
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/blog" className="text-muted-foreground hover:text-primary">
-                                    Blog
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-semibold">Comunidade</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <Link href="/opportunities" className="text-muted-foreground hover:text-primary">
-                                    Oportunidades
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/store" className="text-muted-foreground hover:text-primary">
-                                    Lojinha
-                                </Link>
-                            </li>
-                            <li>
+                    <div className="flex items-center gap-4">
+                        {socialLinks.map((social) => {
+                            const Icon = social.icon
+                            return (
                                 <a
-                                    href={process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL}
+                                    key={social.label}
+                                    href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-muted-foreground hover:text-primary"
+                                    className="text-muted-foreground hover:text-primary transition-colors"
+                                    aria-label={social.label}
                                 >
-                                    WhatsApp
+                                    <Icon className="h-5 w-5" />
                                 </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-semibold">Redes Sociais</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <a
-                                    href="https://instagram.com/monolitosvalley"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-muted-foreground hover:text-primary"
-                                >
-                                    Instagram
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="https://linkedin.com/company/monolitosvalley"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-muted-foreground hover:text-primary"
-                                >
-                                    LinkedIn
-                                </a>
-                            </li>
-                        </ul>
+                            )
+                        })}
                     </div>
                 </div>
 

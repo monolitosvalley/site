@@ -9,7 +9,7 @@ interface NavbarProps {
 
 export function Navbar({ user }: NavbarProps) {
     const navLinks = [
-        { href: '/', label: 'Home' },
+        { href: '/', label: 'Início' },
         { href: '/startups', label: 'Startups' },
         { href: '/events', label: 'Eventos' },
         { href: '/blog', label: 'Blog' },
