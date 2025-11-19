@@ -129,11 +129,12 @@ export default async function HomePage() {
   const testimonials = [
     {
       id: 'test-1',
-      name: 'Carlos Mendes',
-      role: 'CEO',
-      company: 'TechAgro',
-      content: 'A Monólitos Valley foi fundamental para o crescimento da nossa startup. O networking e as mentorias nos ajudaram a captar nosso primeiro investimento.',
+      name: 'Pedro Daniel',
+      role: 'Designer',
+      company: 'Dan Design Studio',
+      content: 'Uma Experiência única, fazer parte de tudo isso é algo tão lindo, se sentir parte de algo tão grandioso assim, faz meus olhos brilharem ❤️',
       rating: 5,
+      avatar: 'https://pedrodaniel.my.canva.site/_assets/media/1e769daa2e635bb6cf51369531f14706.jpg'
     },
     {
       id: 'test-2',
@@ -142,6 +143,7 @@ export default async function HomePage() {
       company: 'EduConnect',
       content: 'Encontrei aqui uma comunidade que realmente entende os desafios de empreender no interior. Os eventos são incríveis e as conexões são reais.',
       rating: 5,
+      avatar: 'https://randomuser.me/api/portraits/women/38.jpg'
     },
     {
       id: 'test-3',
@@ -150,6 +152,7 @@ export default async function HomePage() {
       company: 'Anjo Investidor',
       content: 'A qualidade das startups que encontro na Monólitos Valley é excepcional. É um ecossistema que está crescendo rapidamente e gerando ótimas oportunidades.',
       rating: 5,
+      avatar: 'https://randomuser.me/api/portraits/men/13.jpg'
     },
   ]
 
@@ -239,6 +242,11 @@ export default async function HomePage() {
       <Testimonials testimonials={testimonials} />
 
       {/* Partners Section */}
+      {(() => {
+        console.log('🔍 Partners array completo:', partners)
+        console.log('🔍 Total de parceiros:', partners.length)
+        return null
+      })()}
       {partners.length > 0 && (
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
