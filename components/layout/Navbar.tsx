@@ -47,7 +47,7 @@ export function Navbar({ user }: NavbarProps) {
                                 key={link.href}
                                 href={link.href}
                                 prefetch={false}
-                                className="text-sm font-medium text-stone-700 transition-colors hover:text-amber-600"
+                                className="text-sm font-medium text-stone-700 transition-colors hover:text-[#F2CB05]"
                             >
                                 {link.label}
                             </Link>
@@ -89,7 +89,7 @@ export function Navbar({ user }: NavbarProps) {
                                     key={link.href}
                                     href={link.href}
                                     prefetch={false}
-                                    className="block px-4 py-2 text-sm font-medium text-stone-700 rounded-md hover:bg-amber-50 hover:text-amber-600 transition-colors"
+                                    className="block px-4 py-2 text-sm font-medium text-stone-700 rounded-md hover:bg-[#F2CB05]/10 hover:text-[#F2CB05] transition-colors"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {link.label}

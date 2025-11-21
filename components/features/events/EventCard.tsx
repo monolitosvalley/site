@@ -48,7 +48,7 @@ export function EventCard({ event, variant = 'list' }: EventCardProps) {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                    <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold">
+                    <Button className="w-full">
                         Inscrever-se
                     </Button>
                 </CardContent>

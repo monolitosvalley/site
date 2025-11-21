@@ -173,7 +173,7 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-stone-900 mb-4">
-              Por que fazer parte da <span className="text-amber-600">Monólitos Valley?</span>
+              Por que fazer parte da Monólitos Valley?
             </h2>
             <p className="text-stone-600 text-lg max-w-2xl mx-auto">
               A comunidade de startups do Sertão Central oferece tudo que você precisa para transformar sua ideia em um negócio de sucesso
@@ -210,7 +210,7 @@ export default async function HomePage() {
                   <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2">Próximos Eventos</h2>
                   <p className="text-stone-600">Participe dos nossos eventos e expanda sua rede de contatos</p>
                 </div>
-                <Link href="/events" className="text-amber-600 hover:text-amber-700 font-semibold text-sm border border-amber-500 px-4 py-2 rounded-lg hover:bg-amber-50 transition-colors w-fit">
+                <Link href="/events" className="text-[#F2CB05] hover:text-[#d4b304] font-semibold text-sm border border-[#F2CB05] px-4 py-2 rounded-lg hover:bg-[#F2CB05]/10 transition-colors w-fit">
                   Ver todos →
                 </Link>
               </div>
@@ -230,7 +230,7 @@ export default async function HomePage() {
                   <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2">Startups em Destaque</h2>
                   <p className="text-stone-600">Conheça as startups inovadoras que estão transformando o Sertão Central</p>
                 </div>
-                <Link href="/startups" className="text-amber-600 hover:text-amber-700 font-semibold text-sm border border-amber-500 px-4 py-2 rounded-lg hover:bg-amber-50 transition-colors w-fit">
+                <Link href="/startups" className="text-[#F2CB05] hover:text-[#d4b304] font-semibold text-sm border border-[#F2CB05] px-4 py-2 rounded-lg hover:bg-[#F2CB05]/10 transition-colors w-fit">
                   Ver todas →
                 </Link>
               </div>

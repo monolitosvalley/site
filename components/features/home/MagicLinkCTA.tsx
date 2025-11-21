@@ -97,7 +97,7 @@ export function MagicLinkCTA({ title, description, subtitle }: MagicLinkCTAProps
                 <Button
                     type="submit"
                     disabled={loading || !email}
-                    className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold whitespace-nowrap"
+                    className="whitespace-nowrap"
                 >
                     {loading ? (
                         <>

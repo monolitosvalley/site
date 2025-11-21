@@ -168,10 +168,10 @@ export function StartupMap({ startups }: StartupMapProps) {
                                                     href={startup.website}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-colors"
+                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F2CB05]/10 hover:bg-[#F2CB05]/20 border border-[#F2CB05]/30 transition-colors"
                                                     title="Website"
                                                 >
-                                                    <Globe className="h-4 w-4 text-blue-600" />
+                                                    <Globe className="h-4 w-4 text-[#F2CB05]" />
                                                 </Link>
                                             )}
                                             {startup.linkedin && (
@@ -179,10 +179,10 @@ export function StartupMap({ startups }: StartupMapProps) {
                                                     href={startup.linkedin}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-colors"
+                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F2CB05]/10 hover:bg-[#F2CB05]/20 border border-[#F2CB05]/30 transition-colors"
                                                     title="LinkedIn"
                                                 >
-                                                    <TrendingUp className="h-4 w-4 text-blue-600" />
+                                                    <TrendingUp className="h-4 w-4 text-[#F2CB05]" />
                                                 </Link>
                                             )}
                                             {startup.instagram && (
@@ -190,10 +190,10 @@ export function StartupMap({ startups }: StartupMapProps) {
                                                     href={startup.instagram}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-200 transition-colors"
+                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F2CB05]/10 hover:bg-[#F2CB05]/20 border border-[#F2CB05]/30 transition-colors"
                                                     title="Instagram"
                                                 >
-                                                    <Camera className="h-4 w-4 text-pink-600" />
+                                                    <Camera className="h-4 w-4 text-[#F2CB05]" />
                                                 </Link>
                                             )}
                                             {startup.pitch_deck_url && (
@@ -201,10 +201,10 @@ export function StartupMap({ startups }: StartupMapProps) {
                                                     href={`/api/pitch-deck/${startup.owner_id}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-50 hover:bg-orange-100 border border-orange-200 transition-colors"
+                                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F2CB05]/10 hover:bg-[#F2CB05]/20 border border-[#F2CB05]/30 transition-colors"
                                                     title="Pitch Deck"
                                                 >
-                                                    <FileText className="h-4 w-4 text-orange-600" />
+                                                    <FileText className="h-4 w-4 text-[#F2CB05]" />
                                                 </Link>
                                             )}
                                         </div>
@@ -217,10 +217,10 @@ export function StartupMap({ startups }: StartupMapProps) {
                                         href={`/startups/${startup.slug}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center justify-center gap-2 w-full bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg px-4 py-2.5 transition-all hover:shadow-md"
+                                        className="flex items-center justify-center gap-2 w-full bg-[#F2CB05] hover:bg-[#d4b304] text-stone-900 font-semibold rounded-lg px-4 py-2.5 transition-all hover:shadow-md"
                                     >
-                                        <ExternalLink className="h-4 w-4 text-white" />
-                                        <span className="text-white">Abrir mais detalhes</span>
+                                        <ExternalLink className="h-4 w-4" />
+                                        <span>Abrir mais detalhes</span>
                                     </Link>
                                 )}
                             </div>

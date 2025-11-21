@@ -67,7 +67,7 @@ export function OpportunityCard({ opportunity }: OpportunityCardProps) {
             )}
             {opportunity.application_url && (
                 <CardContent className="pt-0">
-                    <Button asChild className="w-full" size="sm">
+                    <Button asChild className="w-full" size="sm" variant="default">
                         <a href={opportunity.application_url} target="_blank" rel="noopener noreferrer">
                             <ExternalLink className="w-4 h-4 mr-2" />
                             Inscrever-se
