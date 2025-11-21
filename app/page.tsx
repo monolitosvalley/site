@@ -295,12 +295,12 @@ export default async function HomePage() {
           </svg>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
+        {/* <div className="container mx-auto px-4 relative z-10">
           <MagicLinkCTA
             title="Pronto para transformar sua startup?"
             description="Junte-se a dezenas de empreenderoes e ajude a construir o futuro do Sertão Central Cearense hoje mesmo."
           />
-        </div>
+        </div> */}
       </section>
     </div>
   )
