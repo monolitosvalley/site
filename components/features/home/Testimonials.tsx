@@ -1,4 +1,3 @@
-import { Star } from 'lucide-react'
 import Image from 'next/image'
 
 interface Testimonial {
@@ -8,7 +7,6 @@ interface Testimonial {
     company: string
     content: string
     avatar?: string
-    rating?: number
 }
 
 interface TestimonialsProps {
@@ -36,18 +34,6 @@ export function Testimonials({
                             key={testimonial.id}
                             className="bg-stone-800 border border-stone-700 rounded-lg p-8 hover:border-amber-500/50 transition-colors"
                         >
-                            {/* Rating */}
-                            {testimonial.rating && (
-                                <div className="flex gap-1 mb-4">
-                                    {Array.from({ length: testimonial.rating }).map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className="w-4 h-4 fill-amber-400 text-amber-400"
-                                        />
-                                    ))}
-                                </div>
-                            )}
-
                             {/* Content */}
                             <p className="text-stone-300 mb-6 leading-relaxed">
                                 "{testimonial.content}"

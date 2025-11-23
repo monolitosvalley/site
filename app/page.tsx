@@ -133,7 +133,6 @@ export default async function HomePage() {
       role: 'Designer',
       company: 'Dan Design Studio',
       content: 'Uma Experiência única, fazer parte de tudo isso é algo tão lindo, se sentir parte de algo tão grandioso assim, faz meus olhos brilharem ❤️',
-      rating: 5,
       avatar: 'https://pedrodaniel.my.canva.site/_assets/media/1e769daa2e635bb6cf51369531f14706.jpg'
     },
     {
@@ -142,8 +141,7 @@ export default async function HomePage() {
       role: 'Fundadora',
       company: 'EduConnect',
       content: 'Encontrei aqui uma comunidade que realmente entende os desafios de empreender no interior. Os eventos são incríveis e as conexões são reais.',
-      rating: 5,
-      avatar: 'https://randomuser.me/api/portraits/women/38.jpg'
+      avatar: 'https://ui-avatars.com/api/?name=Ana+Paula+Silva&background=d97706&color=fff&size=200'
     },
     {
       id: 'test-3',
@@ -151,8 +149,7 @@ export default async function HomePage() {
       role: 'Investidor',
       company: 'Anjo Investidor',
       content: 'A qualidade das startups que encontro na Monólitos Valley é excepcional. É um ecossistema que está crescendo rapidamente e gerando ótimas oportunidades.',
-      rating: 5,
-      avatar: 'https://randomuser.me/api/portraits/men/13.jpg'
+      avatar: 'https://ui-avatars.com/api/?name=Rafael+Costa&background=d97706&color=fff&size=200'
     },
   ]
 
