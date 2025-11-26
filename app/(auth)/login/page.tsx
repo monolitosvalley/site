@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -13,10 +13,23 @@ import Link from 'next/link'
 export default function LoginPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
     const router = useRouter()
     const supabase = createClient()
+
+    // Verifica se o usuário já está autenticado
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                router.push('/profile')
+            } else {
+                setLoading(false)
+            }
+        }
+        checkUser()
+    }, [router, supabase])
 
     const handleEmailLogin = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -61,6 +74,14 @@ export default function LoginPage() {
         } finally {
             setLoading(false)
         }
+    }
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center p-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F2CB05]"></div>
+            </div>
+        )
     }
 
     return (
