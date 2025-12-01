@@ -12,8 +12,10 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, variant = 'list' }: EventCardProps) {
-    const formattedDate = event.date
-        ? format(new Date(event.date), "d 'de' MMMM", { locale: ptBR })
+    // Usar event_date (novo) ou date (antigo) para compatibilidade
+    const dateValue = event.event_date || event.date
+    const formattedDate = dateValue
+        ? format(new Date(dateValue), "d 'de' MMMM 'às' HH:mm", { locale: ptBR })
         : 'Data não definida'
 
     const time = event.start_time || ''
@@ -37,9 +39,24 @@ export function EventCard({ event, variant = 'list' }: EventCardProps) {
                         <span className="flex items-center gap-2 text-amber-600 font-medium">
                             <Calendar className="w-4 h-4" />
                             {formattedDate}
-                            {time && <span className="text-stone-600">{time}</span>}
                         </span>
-                        {event.location && (
+                        {event.address && (
+                            <span className="flex items-center gap-2 text-stone-600">
+                                <MapPin className="w-4 h-4" />
+                                {event.address}
+                            </span>
+                        )}
+                        {event.link && (
+                            <a
+                                href={event.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-blue-600 hover:underline text-sm"
+                            >
+                                🔗 Link do evento
+                            </a>
+                        )}
+                        {event.location && !event.address && !event.link && (
                             <span className="flex items-center gap-2 text-stone-600">
                                 <MapPin className="w-4 h-4" />
                                 {event.location}
@@ -76,9 +93,24 @@ export function EventCard({ event, variant = 'list' }: EventCardProps) {
                             <span className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4 text-amber-600" />
                                 <span className="text-amber-600 font-medium">{formattedDate}</span>
-                                {time && <span className="text-stone-600">{time}</span>}
                             </span>
-                            {event.location && (
+                            {event.address && (
+                                <span className="flex items-center gap-2">
+                                    <MapPin className="w-4 h-4 text-amber-600" />
+                                    {event.address}
+                                </span>
+                            )}
+                            {event.link && (
+                                <a
+                                    href={event.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 text-blue-600 hover:underline text-sm"
+                                >
+                                    🔗 Link do evento
+                                </a>
+                            )}
+                            {event.location && !event.address && !event.link && (
                                 <span className="flex items-center gap-2">
                                     <MapPin className="w-4 h-4 text-amber-600" />
                                     {event.location}

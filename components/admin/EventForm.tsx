@@ -17,8 +17,8 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
         title: '',
         description: '',
         event_datetime: '',
-        duration_minutes: '120',
-        location: '',
+        address: '',
+        link: '',
         image_url: '',
     })
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -57,14 +57,19 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
                 title: formData.title,
                 description: formData.description,
                 event_date: isoDate, // Data e hora completas
-                location: formData.location,
                 created_by: user.id,
                 approved: false,
             }
 
-            // Adicionar image_url apenas se existir
+            // Adicionar campos opcionais apenas se existirem
             if (formData.image_url) {
                 eventData.image_url = formData.image_url
+            }
+            if (formData.address) {
+                eventData.address = formData.address
+            }
+            if (formData.link) {
+                eventData.link = formData.link
             }
 
             console.log('📤 Enviando evento:', eventData)
@@ -74,7 +79,7 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
             if (error) throw error
 
             toast.success('Evento criado com sucesso!')
-            setFormData({ title: '', description: '', event_datetime: '', duration_minutes: '120', location: '', image_url: '' })
+            setFormData({ title: '', description: '', event_datetime: '', address: '', link: '', image_url: '' })
             onSuccess()
         } catch (error) {
             toast.error('Erro ao criar evento')
@@ -115,22 +120,28 @@ export function EventForm({ onSuccess }: { onSuccess: () => void }) {
                         />
                     </div>
                     <div>
-                        <label className="text-sm font-medium">Duração (minutos)</label>
+                        <label className="text-sm font-medium">Endereço (Presencial)</label>
                         <Input
-                            type="number"
-                            min="30"
-                            max="480"
-                            value={formData.duration_minutes}
-                            onChange={(e) => setFormData({ ...formData, duration_minutes: e.target.value })}
-                            required
+                            placeholder="Ex: Rua ABC, 123 - Centro, Quixadá/CE"
+                            value={formData.address}
+                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         />
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Deixe em branco se for apenas online
+                        </p>
                     </div>
-                    <Input
-                        placeholder="Local do evento"
-                        value={formData.location}
-                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                        required
-                    />
+                    <div>
+                        <label className="text-sm font-medium">Link (Online)</label>
+                        <Input
+                            type="url"
+                            placeholder="Ex: https://meet.google.com/abc-defg-hij"
+                            value={formData.link}
+                            onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Google Meet, Zoom, Teams, etc.
+                        </p>
+                    </div>
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Imagem do evento</label>

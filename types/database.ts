@@ -51,11 +51,14 @@ export interface Event {
   id: string
   title: string
   description: string | null
-  date: string
+  event_date: string
+  date?: string // Deprecated - usar event_date
   start_time: string | null
   end_time: string | null
   image_url: string | null
-  location: string | null
+  location: string | null // Deprecated - usar address ou link
+  address: string | null // Endereço físico
+  link: string | null // Link online (Google Meet, Zoom, etc)
   created_by: string | null
   approved: boolean
   created_at: string
