@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       query = query.lte("event_date", to_date)
     }
 
-    query = query.order("event_date", { ascending: true }).limit(limit)
+    query = query.order("event_date", { ascending: false }).limit(limit)
 
     const { data, error } = await query
 

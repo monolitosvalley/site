@@ -10,7 +10,7 @@ import Image from 'next/image'
 
 async function getEvents() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events?limit=3`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events?limit=6`, {
       cache: 'no-store',
     })
     if (!res.ok) return []
