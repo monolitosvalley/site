@@ -88,7 +88,7 @@ describe('BlogPostForm', () => {
     fireEvent.click(submitBtn)
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/blog-posts/123', expect.objectContaining({
+      expect(global.fetch).toHaveBeenCalledWith('/api/admin/blog-posts/123', expect.objectContaining({
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: expect.stringContaining('Post Atualizado')

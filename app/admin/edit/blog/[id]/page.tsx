@@ -38,7 +38,7 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
                 }
 
                 // Fetch blog post
-                const res = await fetch(`/api/blog-posts/${unwrappedParams.id}`)
+                const res = await fetch(`/api/admin/blog-posts/${unwrappedParams.id}`)
                 if (!res.ok) throw new Error('Post não encontrado')
                 
                 const { data } = await res.json()

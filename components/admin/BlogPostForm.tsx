@@ -62,7 +62,7 @@ export function BlogPostForm({ onSuccess, initialData }: { onSuccess: () => void
 
             if (initialData?.id) {
                 // Update existing post
-                const res = await fetch(`/api/blog-posts/${initialData.id}`, {
+                const res = await fetch(`/api/admin/blog-posts/${initialData.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
@@ -98,7 +98,7 @@ export function BlogPostForm({ onSuccess, initialData }: { onSuccess: () => void
     async function handleDelete() {
         setDeleting(true)
         try {
-            const res = await fetch(`/api/blog-posts/${initialData.id}`, {
+            const res = await fetch(`/api/admin/blog-posts/${initialData.id}`, {
                 method: 'DELETE'
             })
 

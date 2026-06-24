@@ -301,7 +301,7 @@ export default function AdminPage() {
                                                     onClick={() => {
                                                         if(key === 'startups' || key === 'blog') {
                                                             // For Startups and Blog, we use their API to handle storage cascade deletion
-                                                            fetch(`/api/${key === 'startups' ? 'startups' : 'blog-posts'}/${item.id}`, { method: 'DELETE' })
+                                                            fetch(`/api/${key === 'startups' ? 'startups' : 'admin/blog-posts'}/${item.id}`, { method: 'DELETE' })
                                                                 .then(() => {
                                                                     toast.success('Excluído com sucesso')
                                                                     fetchPending()
