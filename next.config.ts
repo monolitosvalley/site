@@ -22,7 +22,12 @@ const nextConfig: NextConfig = {
     ],
     formats: ["image/webp"]
   },
-  compress: true
+  compress: true,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '100mb',
+    },
+  },
 }
 
 export default nextConfig
