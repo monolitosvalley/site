@@ -36,8 +36,8 @@ export async function uploadFileAction(formData: FormData) {
     const file = formData.get("file") as File | null
     const bucket = formData.get("bucket") as BucketName | null
 
-    if (!file) {
-      return { error: "Arquivo não fornecido" }
+    if (!file || !(file instanceof File)) {
+      return { error: "Arquivo inválido ou não fornecido" }
     }
 
     if (!bucket) {
