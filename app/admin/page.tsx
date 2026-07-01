@@ -227,6 +227,17 @@ export default function AdminPage() {
 
                 <TabsContent value="create" className="mt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Card className="flex flex-col justify-between border-dashed border-2 border-amber-500/35 bg-amber-500/5 hover:bg-amber-500/10 transition-colors">
+                            <CardHeader>
+                                <CardTitle className="text-amber-500 flex items-center gap-2">🚀 Cadastrar Startup</CardTitle>
+                                <CardDescription>Cadastre uma nova startup no portal e associe a um usuário existente ou convide um novo dono.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                                <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium" onClick={() => router.push('/admin/startups/new')}>
+                                    Novo Cadastro de Startup
+                                </Button>
+                            </CardContent>
+                        </Card>
                         <BlogPostForm onSuccess={fetchPending} />
                         <EventForm onSuccess={fetchPending} />
                         <OpportunityForm onSuccess={fetchPending} />

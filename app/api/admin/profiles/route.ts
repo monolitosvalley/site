@@ -1,0 +1,66 @@
+import { createClient, createServiceClient } from "@/lib/supabase/server"
+import { NextRequest, NextResponse } from "next/server"
+
+async function checkAdmin() {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
+    return { error: "Não autenticado", status: 401 }
+  }
+
+  const serviceClient = await createServiceClient()
+  const { data: profile } = await serviceClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single()
+
+  if (profile?.role !== "admin") {
+    return { error: "Acesso negado", status: 403 }
+  }
+
+  return { user, serviceClient }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const auth = await checkAdmin()
+    if (auth.error) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status })
+    }
+
+    const serviceClient = auth.serviceClient!
+
+    // Fetch all profiles
+    const { data: profiles, error: profilesError } = await serviceClient
+      .from("profiles")
+      .select("id, full_name, email")
+      .order("full_name", { ascending: true })
+
+    if (profilesError) {
+      console.error("Profiles fetch error:", profilesError)
+      return NextResponse.json({ error: "Erro ao buscar perfis" }, { status: 500 })
+    }
+
+    // Fetch all startups to find which ones are already linked
+    const { data: startups, error: startupsError } = await serviceClient
+      .from("startups")
+      .select("owner_id")
+
+    if (startupsError) {
+      console.error("Startups fetch error:", startupsError)
+      return NextResponse.json({ error: "Erro ao buscar startups" }, { status: 500 })
+    }
+
+    const ownedUserIds = new Set(startups?.map(s => s.owner_id) || [])
+    
+    // Filter profiles that do not own any startup
+    const availableProfiles = (profiles || []).filter(p => !ownedUserIds.has(p.id))
+
+    return NextResponse.json({ data: availableProfiles })
+  } catch (error) {
+    console.error("Unexpected error in GET profiles:", error)
+    return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
+  }
+}
