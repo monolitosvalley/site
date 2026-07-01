@@ -119,22 +119,7 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
 
             const data = await res.json()
             setLogoUrl(data.url)
-
-            // Save logo immediately
-            const saveRes = await fetch(isAdminEdit && startup?.id ? `/api/startups/${startup.id}` : '/api/profile', {
-                method: isAdminEdit ? 'PUT' : 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    startup: { logo_url: data.url },
-                }),
-            })
-
-            if (saveRes.ok) {
-                toast.success('Logo enviado com sucesso!')
-                onSuccess?.()
-            } else {
-                throw new Error('Erro ao salvar logo')
-            }
+            toast.success('Logo enviado com sucesso!')
         } catch (error) {
             toast.error('Erro ao enviar logo')
             console.error(error)
@@ -162,22 +147,7 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
 
             const data = await res.json()
             setPitchDeckUrl(data.url)
-
-            // Save pitch deck immediately
-            const saveRes = await fetch(isAdminEdit && startup?.id ? `/api/startups/${startup.id}` : '/api/profile', {
-                method: isAdminEdit ? 'PUT' : 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    startup: { pitch_deck_url: data.url },
-                }),
-            })
-
-            if (saveRes.ok) {
-                toast.success('Pitch deck enviado com sucesso!')
-                onSuccess?.()
-            } else {
-                throw new Error('Erro ao salvar pitch deck')
-            }
+            toast.success('Pitch deck enviado com sucesso!')
         } catch (error) {
             toast.error('Erro ao enviar pitch deck')
             console.error(error)
@@ -486,13 +456,13 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
             {/* ESG */}
             <div className="flex items-center space-x-2">
                 <Controller
-                    name="is_esg"
+                    name="tem_esg"
                     control={control}
                     render={({ field }) => (
-                        <Checkbox id="is_esg" checked={field.value} onCheckedChange={field.onChange} />
+                        <Checkbox id="tem_esg" checked={!!field.value} onCheckedChange={field.onChange} />
                     )}
                 />
-                <Label htmlFor="is_esg" className="cursor-pointer">
+                <Label htmlFor="tem_esg" className="cursor-pointer">
                     Startup com foco em ESG (Ambiental, Social e Governança)
                 </Label>
             </div>

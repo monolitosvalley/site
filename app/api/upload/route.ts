@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { NextRequest, NextResponse } from "next/server"
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
-const MAX_PDF_SIZE = 10 * 1024 * 1024 // 10MB
+const MAX_PDF_SIZE = 100 * 1024 * 1024 // 100MB
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     // Validate size based on type
     if (isPdf && file.size > MAX_PDF_SIZE) {
       return NextResponse.json(
-        { error: "PDF deve ter no máximo 10MB" },
+        { error: "PDF deve ter no máximo 100MB" },
         { status: 400 }
       )
     }
