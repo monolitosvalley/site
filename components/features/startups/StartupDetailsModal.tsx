@@ -75,44 +75,64 @@ export function StartupDetailsModal({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <div className="flex items-start gap-4 mb-4">
-                        {/* Logo on the left */}
-                        {startup.logo_url && (
-                            <Image
-                                src={startup.logo_url}
-                                alt={startup.name}
-                                width={80}
-                                height={80}
-                                className="rounded-lg object-contain flex-shrink-0"
-                            />
-                        )}
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+                {/* Banner Image */}
+                {startup.banner_url ? (
+                    <div className="relative h-32 w-full bg-stone-100">
+                        <Image
+                            src={startup.banner_url}
+                            alt={`${startup.name} banner`}
+                            fill
+                            className="object-cover"
+                        />
+                    </div>
+                ) : (
+                    <div className="h-16 w-full bg-gradient-to-r from-amber-500/20 to-orange-600/20 border-b" />
+                )}
 
-                        {/* Title and info on the right */}
-                        <div className="flex-1 min-w-0">
-                            <DialogTitle className="text-2xl mb-2">{startup.name}</DialogTitle>
-                            {startup.cnpj && (
-                                <p className="text-sm text-muted-foreground mb-3">CNPJ: {formatCNPJ(startup.cnpj)}</p>
+                <div className="p-6">
+                    <DialogHeader>
+                        <div className="flex flex-col sm:flex-row items-start gap-4 mb-4 -mt-12 sm:-mt-16">
+                            {/* Logo on the left */}
+                            {startup.logo_url ? (
+                                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl border-4 border-white bg-white shadow-md overflow-hidden flex-shrink-0">
+                                    <Image
+                                        src={startup.logo_url}
+                                        alt={startup.name}
+                                        fill
+                                        className="object-contain p-1"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl border-4 border-white bg-gradient-to-br from-amber-400 to-orange-500 shadow-md flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+                                    {startup.name.charAt(0)}
+                                </div>
                             )}
-                            <div className="flex flex-wrap gap-2">
-                                <Badge className="bg-amber-100 text-amber-800 border border-amber-300">
-                                    {startup.segmento}
-                                </Badge>
-                                <Badge className="bg-blue-100 text-blue-800 border border-blue-300">
-                                    <TrendingUp className="w-3 h-3 mr-1" />
-                                    {ESTAGIO_LABELS[startup.estagio_maturidade] || startup.estagio_maturidade}
-                                </Badge>
-                                {startup.tem_esg && (
-                                    <Badge className="bg-green-100 text-green-800 border border-green-300">
-                                        <Leaf className="w-3 h-3 mr-1" />
-                                        ESG
-                                    </Badge>
+
+                            {/* Title and info on the right */}
+                            <div className="flex-1 min-w-0 sm:pt-8">
+                                <DialogTitle className="text-2xl mb-1">{startup.name}</DialogTitle>
+                                {startup.cnpj && (
+                                    <p className="text-xs text-muted-foreground mb-2">CNPJ: {formatCNPJ(startup.cnpj)}</p>
                                 )}
+                                <div className="flex flex-wrap gap-2">
+                                    <Badge className="bg-amber-100 text-amber-800 border border-amber-300">
+                                        {startup.segmento}
+                                    </Badge>
+                                    <Badge className="bg-blue-100 text-blue-800 border border-blue-300">
+                                        <TrendingUp className="w-3 h-3 mr-1" />
+                                        {ESTAGIO_LABELS[startup.estagio_maturidade] || startup.estagio_maturidade}
+                                    </Badge>
+                                    {startup.tem_esg && (
+                                        <Badge className="bg-green-100 text-green-800 border border-green-300">
+                                            <Leaf className="w-3 h-3 mr-1" />
+                                            ESG
+                                        </Badge>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </DialogHeader>
+                    </DialogHeader>
 
                 <div className="space-y-4 mt-4">
                     {/* Descrição */}
@@ -120,6 +140,14 @@ export function StartupDetailsModal({
                         <div className="border-l-4 border-amber-500 pl-4">
                             <h3 className="font-semibold mb-2">Sobre</h3>
                             <p className="text-sm text-muted-foreground">{startup.description}</p>
+                        </div>
+                    )}
+
+                    {/* Programas e Investimentos */}
+                    {startup.programas_investimentos && (
+                        <div className="border-l-4 border-blue-500 pl-4">
+                            <h3 className="font-semibold mb-2">Programas e Investimentos</h3>
+                            <p className="text-sm text-muted-foreground">{startup.programas_investimentos}</p>
                         </div>
                     )}
 
@@ -170,43 +198,45 @@ export function StartupDetailsModal({
                     )}
 
                     {/* Links */}
-                    <div>
-                        <h3 className="font-semibold text-sm mb-3">Links</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {startup.website && (
-                                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full" asChild>
-                                    <Link href={startup.website} target="_blank" rel="noopener noreferrer">
-                                        <Globe className="h-4 w-4 mr-2" />
-                                        Website
-                                    </Link>
-                                </Button>
-                            )}
-                            {startup.linkedin && (
-                                <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white rounded-full" asChild>
-                                    <Link href={startup.linkedin} target="_blank" rel="noopener noreferrer">
-                                        <Share2 className="h-4 w-4 mr-2" />
-                                        LinkedIn
-                                    </Link>
-                                </Button>
-                            )}
-                            {startup.instagram && (
-                                <Button size="sm" className="bg-pink-600 hover:bg-pink-700 text-white rounded-full" asChild>
-                                    <Link href={startup.instagram} target="_blank" rel="noopener noreferrer">
-                                        <Camera className="h-4 w-4 mr-2" />
-                                        Instagram
-                                    </Link>
-                                </Button>
-                            )}
-                            {startup.pitch_deck_url && (
-                                <Button size="sm" className="bg-orange-600 hover:bg-orange-700 text-white rounded-full" asChild>
-                                    <Link href={`/api/pitch-deck/${startup.owner_id}`} target="_blank" rel="noopener noreferrer">
-                                        <FileText className="h-4 w-4 mr-2" />
-                                        Pitch Deck
-                                    </Link>
-                                </Button>
-                            )}
+                    {(startup.website || startup.linkedin || startup.instagram || startup.pitch_deck_url) && (
+                        <div>
+                            <h3 className="font-semibold text-sm mb-3">Links</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {startup.website && (
+                                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full" asChild>
+                                        <Link href={startup.website} target="_blank" rel="noopener noreferrer">
+                                            <Globe className="h-4 w-4 mr-2" />
+                                            Website
+                                        </Link>
+                                    </Button>
+                                )}
+                                {startup.linkedin && (
+                                    <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white rounded-full" asChild>
+                                        <Link href={startup.linkedin} target="_blank" rel="noopener noreferrer">
+                                            <Share2 className="h-4 w-4 mr-2" />
+                                            LinkedIn
+                                        </Link>
+                                    </Button>
+                                )}
+                                {startup.instagram && (
+                                    <Button size="sm" className="bg-pink-600 hover:bg-pink-700 text-white rounded-full" asChild>
+                                        <Link href={startup.instagram} target="_blank" rel="noopener noreferrer">
+                                            <Camera className="h-4 w-4 mr-2" />
+                                            Instagram
+                                        </Link>
+                                    </Button>
+                                )}
+                                {startup.pitch_deck_url && (
+                                    <Button size="sm" className="bg-orange-600 hover:bg-orange-700 text-white rounded-full" asChild>
+                                        <Link href={`/api/pitch-deck/${startup.owner_id}`} target="_blank" rel="noopener noreferrer">
+                                            <FileText className="h-4 w-4 mr-2" />
+                                            Pitch Deck
+                                        </Link>
+                                    </Button>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Full Page Button */}
                     {showFullPageButton && startup?.slug && (
@@ -293,6 +323,7 @@ export function StartupDetailsModal({
                             </div>
                         </div>
                     )}
+                </div>
                 </div>
             </DialogContent>
         </Dialog>

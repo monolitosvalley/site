@@ -42,6 +42,8 @@ export interface Startup {
   pitch_deck_url: string | null
   cnpj: string | null
   slug: string | null
+  banner_url: string | null
+  programas_investimentos: string | null
   approved: boolean
   created_at: string
   updated_at: string

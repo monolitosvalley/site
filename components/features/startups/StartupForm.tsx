@@ -69,8 +69,10 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
     const [loading, setLoading] = useState(false)
     const [deleting, setDeleting] = useState(false)
     const [uploadingLogo, setUploadingLogo] = useState(false)
+    const [uploadingBanner, setUploadingBanner] = useState(false)
     const [uploadingPitch, setUploadingPitch] = useState(false)
     const [logoUrl, setLogoUrl] = useState(startup?.logo_url || '')
+    const [bannerUrl, setBannerUrl] = useState(startup?.banner_url || '')
     const [pitchDeckUrl, setPitchDeckUrl] = useState(startup?.pitch_deck_url || '')
     const [technologies, setTechnologies] = useState<string[]>(startup?.tecnologias || [])
     const [newTech, setNewTech] = useState('')
@@ -98,6 +100,7 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
             estado: startup?.estado || '',
             cnpj: startup?.cnpj || '',
             tem_esg: startup?.tem_esg || false,
+            programas_investimentos: startup?.programas_investimentos || '',
         },
     })
 
@@ -122,6 +125,34 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
             console.error(error)
         } finally {
             setUploadingLogo(false)
+        }
+    }
+
+    const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setUploadingBanner(true)
+        try {
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('bucket', 'banners')
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            })
+
+            if (!res.ok) throw new Error('Erro ao fazer upload')
+
+            const data = await res.json()
+            setBannerUrl(data.url)
+            toast.success('Banner enviado com sucesso!')
+        } catch (error) {
+            toast.error('Erro ao enviar banner')
+            console.error(error)
+        } finally {
+            setUploadingBanner(false)
         }
     }
 
@@ -168,6 +199,7 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
             const startupData = {
                 ...data,
                 logo_url: logoUrl || null,
+                banner_url: bannerUrl || null,
                 pitch_deck_url: pitchDeckUrl || null,
                 tecnologias: technologies,
                 latitude: latitude || null,
@@ -175,6 +207,7 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
                 cidade: cidade || data.cidade,
                 estado: estado || data.estado,
                 cnpj: data.cnpj || null,
+                programas_investimentos: data.programas_investimentos || null,
             }
 
             const res = await fetch(isAdminEdit && startup?.id ? `/api/startups/${startup.id}` : '/api/profile', {
@@ -224,6 +257,40 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Banner Upload */}
+            <div className="space-y-2">
+                <Label>Banner da Startup (Opcional)</Label>
+                <div className="space-y-3">
+                    {bannerUrl && (
+                        <div className="relative h-32 w-full rounded-lg overflow-hidden bg-stone-100 border">
+                            <Image src={bannerUrl} alt="Banner" fill className="object-cover" />
+                        </div>
+                    )}
+                    <div>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleBannerUpload}
+                            className="hidden"
+                            id="banner-upload"
+                        />
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => document.getElementById('banner-upload')?.click()}
+                            disabled={uploadingBanner}
+                        >
+                            {uploadingBanner ? (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            ) : (
+                                <Upload className="w-4 h-4 mr-2" />
+                            )}
+                            {bannerUrl ? 'Alterar Banner' : 'Enviar Banner'}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+
             {/* Logo Upload */}
             <div className="space-y-2">
                 <Label>Logo da Startup</Label>
@@ -368,14 +435,14 @@ export function StartupForm({ startup, onSuccess, isAdminEdit = false }: Startup
                 <Textarea id="publico_atende" {...register('publico_atende')} rows={2} />
             </div>
 
-            {/* Programas Prévios */}
+            {/* Programas e Investimentos */}
             <div className="space-y-2">
-                <Label htmlFor="programas_previos">Programas de Aceleração/Incubação</Label>
+                <Label htmlFor="programas_investimentos">Programas de Aceleração, Prêmios e Investimentos Recebidos</Label>
                 <Textarea
-                    id="programas_previos"
-                    {...register('programas_previos')}
-                    placeholder="Ex: Startup Brasil, Inovativa Brasil..."
-                    rows={2}
+                    id="programas_investimentos"
+                    {...register('programas_investimentos')}
+                    placeholder="Ex: Acelerada pelo Inovativa Brasil 2024, recebeu investimento anjo de R$ 150k..."
+                    rows={3}
                 />
             </div>
 

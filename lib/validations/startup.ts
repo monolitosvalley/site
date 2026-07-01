@@ -48,7 +48,9 @@ export const startupSchema = z.object({
   detalhes_esg: z.string().optional(),
   cnpj: z.string().optional().or(z.literal("")),
   logo_url: z.string().url("URL inválida").optional().or(z.literal("")),
-  pitch_deck_url: z.string().url("URL inválida").optional().or(z.literal(""))
+  pitch_deck_url: z.string().url("URL inválida").optional().or(z.literal("")),
+  banner_url: z.string().url("URL inválida").optional().or(z.literal("")),
+  programas_investimentos: z.string().optional().or(z.literal(""))
 })
 
 export type StartupFormData = z.infer<typeof startupSchema>

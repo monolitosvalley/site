@@ -141,9 +141,12 @@ export async function PATCH(request: NextRequest) {
     // Update startup if provided (partial update)
     if (startupData) {
       try {
-        const cleanData = Object.fromEntries(
-          Object.entries(startupData).filter(([_, v]) => v !== undefined)
-        )
+        const cleanData = {
+          ...Object.fromEntries(
+            Object.entries(startupData).filter(([_, v]) => v !== undefined)
+          ),
+          approved: false
+        }
 
         const { data: existingStartup } = await serviceClient
           .from("startups")
@@ -271,7 +274,10 @@ export async function PUT(request: NextRequest) {
           // Update existing startup
           const { data, error: startupError } = await serviceClient
             .from("startups")
-            .update(validatedStartup)
+            .update({
+              ...validatedStartup,
+              approved: false
+            })
             .eq("owner_id", user.id)
             .select()
             .single()
@@ -291,7 +297,8 @@ export async function PUT(request: NextRequest) {
             .from("startups")
             .insert({
               ...validatedStartup,
-              owner_id: user.id
+              owner_id: user.id,
+              approved: false
             })
             .select()
             .single()

@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const segmento = searchParams.get("segmento")
     const estagio_maturidade = searchParams.get("estagio_maturidade")
     const is_esg = searchParams.get("is_esg")
+    const cidade = searchParams.get("cidade")
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "10")
 
@@ -19,6 +20,7 @@ export async function GET(request: NextRequest) {
         .from("startups")
         .select("*")
         .eq("slug", slug)
+        .eq("approved", true)
         .single()
 
       if (error) {
@@ -32,7 +34,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ data: [data] })
     }
 
-    let query = supabase.from("startups").select("*", { count: "exact" })
+    let query = supabase.from("startups").select("*", { count: "exact" }).eq("approved", true)
 
     // Apply filters
     if (segmento) {
@@ -41,6 +43,10 @@ export async function GET(request: NextRequest) {
 
     if (estagio_maturidade) {
       query = query.eq("estagio_maturidade", estagio_maturidade)
+    }
+
+    if (cidade) {
+      query = query.eq("cidade", cidade)
     }
 
     if (is_esg === "true") {

@@ -33,6 +33,7 @@ export default function StartupsPage() {
                 if (filters.segmento) params.append('segmento', filters.segmento)
                 if (filters.estagio_maturidade) params.append('estagio_maturidade', filters.estagio_maturidade)
                 if (filters.is_esg) params.append('is_esg', 'true')
+                if (filters.cidade) params.append('cidade', filters.cidade)
 
                 const res = await fetch(`/api/startups?${params}`)
                 if (res.ok) {

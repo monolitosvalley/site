@@ -69,8 +69,10 @@ export function AdminStartupForm() {
 
     // Startup files & extras
     const [uploadingLogo, setUploadingLogo] = useState(false)
+    const [uploadingBanner, setUploadingBanner] = useState(false)
     const [uploadingPitch, setUploadingPitch] = useState(false)
     const [logoUrl, setLogoUrl] = useState('')
+    const [bannerUrl, setBannerUrl] = useState('')
     const [pitchDeckUrl, setPitchDeckUrl] = useState('')
     const [technologies, setTechnologies] = useState<string[]>([])
     const [newTech, setNewTech] = useState('')
@@ -98,6 +100,7 @@ export function AdminStartupForm() {
             estado: '',
             cnpj: '',
             tem_esg: false,
+            programas_investimentos: '',
         },
     })
 
@@ -162,6 +165,34 @@ export function AdminStartupForm() {
         }
     }
 
+    const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setUploadingBanner(true)
+        try {
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('bucket', 'banners')
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            })
+
+            if (!res.ok) throw new Error('Erro ao fazer upload')
+
+            const data = await res.json()
+            setBannerUrl(data.url)
+            toast.success('Banner enviado com sucesso!')
+        } catch (error) {
+            toast.error('Erro ao enviar banner')
+            console.error(error)
+        } finally {
+            setUploadingBanner(false)
+        }
+    }
+
     const handlePitchUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (!file) return
@@ -217,6 +248,7 @@ export function AdminStartupForm() {
             const startupData = {
                 ...data,
                 logo_url: logoUrl || null,
+                banner_url: bannerUrl || null,
                 pitch_deck_url: pitchDeckUrl || null,
                 tecnologias: technologies,
                 latitude: latitude || null,
@@ -224,6 +256,7 @@ export function AdminStartupForm() {
                 cidade: cidade || data.cidade,
                 estado: estado || data.estado,
                 cnpj: data.cnpj || null,
+                programas_investimentos: data.programas_investimentos || null,
             }
 
             const payload = {
@@ -378,6 +411,40 @@ export function AdminStartupForm() {
             <div className="bg-card border p-6 rounded-xl space-y-6">
                 <h3 className="text-lg font-semibold text-foreground">Dados da Startup</h3>
 
+                {/* Banner Upload */}
+                <div className="space-y-2">
+                    <Label>Banner da Startup (Opcional)</Label>
+                    <div className="space-y-3">
+                        {bannerUrl && (
+                            <div className="relative h-32 w-full rounded-lg overflow-hidden bg-stone-100 border">
+                                <Image src={bannerUrl} alt="Banner" fill className="object-cover" />
+                            </div>
+                        )}
+                        <div>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleBannerUpload}
+                                className="hidden"
+                                id="banner-upload"
+                            />
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => document.getElementById('banner-upload')?.click()}
+                                disabled={uploadingBanner}
+                            >
+                                {uploadingBanner ? (
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                ) : (
+                                    <Upload className="w-4 h-4 mr-2" />
+                                )}
+                                {bannerUrl ? 'Alterar Banner' : 'Enviar Banner'}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Logo Upload */}
                 <div className="space-y-2">
                     <Label>Logo da Startup</Label>
@@ -500,6 +567,17 @@ export function AdminStartupForm() {
                         )}
                     />
                     {errors.estagio_maturidade && <p className="text-sm text-destructive">{String(errors.estagio_maturidade.message)}</p>}
+                </div>
+
+                {/* Programas e Investimentos */}
+                <div className="space-y-2">
+                    <Label htmlFor="programas_investimentos">Programas de Aceleração, Prêmios e Investimentos Recebidos</Label>
+                    <Textarea
+                        id="programas_investimentos"
+                        {...register('programas_investimentos')}
+                        placeholder="Ex: Acelerada pelo Inovativa Brasil 2024, recebeu investimento anjo de R$ 150k..."
+                        rows={3}
+                    />
                 </div>
 
                 {/* Tecnologias */}

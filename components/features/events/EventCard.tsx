@@ -11,6 +11,25 @@ interface EventCardProps {
     variant?: 'carousel' | 'list' | 'calendar'
 }
 
+function getGoogleCalendarUrl(event: Event) {
+    const title = encodeURIComponent(event.title)
+    const desc = encodeURIComponent(event.description || '')
+    const loc = encodeURIComponent(event.address || event.location || event.link || '')
+    
+    // Parse date
+    const dateValue = event.event_date || event.date
+    const date = dateValue ? new Date(dateValue) : new Date()
+    
+    // End date + 1 hour by default
+    const endDate = new Date(date.getTime() + 60 * 60 * 1000)
+    
+    const formatCalDate = (d: Date) => d.toISOString().replace(/-|:|\.\d\d\d/g, '')
+    
+    const dates = `${formatCalDate(date)}/${formatCalDate(endDate)}`
+    
+    return `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${desc}&location=${loc}`
+}
+
 export function EventCard({ event, variant = 'list' }: EventCardProps) {
     // Usar event_date (novo) ou date (antigo) para compatibilidade
     const dateValue = event.event_date || event.date
@@ -64,9 +83,14 @@ export function EventCard({ event, variant = 'list' }: EventCardProps) {
                         )}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-0">
-                    <Button className="w-full">
+                <CardContent className="pt-0 flex gap-2">
+                    <Button className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold">
                         Inscrever-se
+                    </Button>
+                    <Button variant="outline" size="icon" className="hover:text-amber-600 hover:border-amber-500" title="Adicionar à Agenda" asChild>
+                        <a href={getGoogleCalendarUrl(event)} target="_blank" rel="noopener noreferrer">
+                            📅
+                        </a>
                     </Button>
                 </CardContent>
             </Card>
@@ -120,9 +144,22 @@ export function EventCard({ event, variant = 'list' }: EventCardProps) {
                     </div>
                 </div>
             </CardHeader>
-            {event.description && (
-                <CardContent>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{event.description}</p>
+            {event.description ? (
+                <CardContent className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4">
+                    <p className="text-sm text-muted-foreground line-clamp-2 flex-1">{event.description}</p>
+                    <Button size="sm" variant="outline" className="text-xs font-semibold gap-1 text-stone-600 hover:text-amber-600 hover:border-amber-500 sm:self-end" asChild>
+                        <a href={getGoogleCalendarUrl(event)} target="_blank" rel="noopener noreferrer">
+                            📅 Adicionar à Agenda
+                        </a>
+                    </Button>
+                </CardContent>
+            ) : (
+                <CardContent className="flex justify-end pb-4 pt-0">
+                    <Button size="sm" variant="outline" className="text-xs font-semibold gap-1 text-stone-600 hover:text-amber-600 hover:border-amber-500" asChild>
+                        <a href={getGoogleCalendarUrl(event)} target="_blank" rel="noopener noreferrer">
+                            📅 Adicionar à Agenda
+                        </a>
+                    </Button>
                 </CardContent>
             )}
         </Card>
