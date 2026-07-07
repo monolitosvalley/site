@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { full_name, email, role_title, startup_name, linkedin_url, instagram_url, profile_id } = body
+    const { full_name, email, role_title, startup_name, linkedin_url, instagram_url, photo_url, profile_id } = body
 
     if (!full_name || !role_title) {
       return NextResponse.json({ error: "Nome completo e cargo são obrigatórios" }, { status: 400 })
@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
         startup_name: startup_name || null,
         linkedin_url: linkedin_url || null,
         instagram_url: instagram_url || null,
+        photo_url: photo_url || null,
         profile_id: profile_id || null,
         checklist: [],
         monthly_engagement: []

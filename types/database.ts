@@ -150,6 +150,7 @@ export interface CommunityLeader {
   startup_name: string | null
   linkedin_url: string | null
   instagram_url: string | null
+  photo_url: string | null
   checklist: string[] // Array of completed task IDs
   monthly_engagement: {
     month: string // e.g. "2026-07"

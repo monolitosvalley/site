@@ -42,6 +42,7 @@ export async function PUT(
       startup_name,
       linkedin_url,
       instagram_url,
+      photo_url,
       profile_id,
       checklist,
       monthly_engagement
@@ -54,6 +55,7 @@ export async function PUT(
     if (startup_name !== undefined) updateData.startup_name = startup_name || null
     if (linkedin_url !== undefined) updateData.linkedin_url = linkedin_url || null
     if (instagram_url !== undefined) updateData.instagram_url = instagram_url || null
+    if (photo_url !== undefined) updateData.photo_url = photo_url || null
     if (profile_id !== undefined) updateData.profile_id = profile_id || null
     if (checklist !== undefined) updateData.checklist = checklist
     if (monthly_engagement !== undefined) updateData.monthly_engagement = monthly_engagement

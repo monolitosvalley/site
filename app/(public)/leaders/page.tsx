@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Leader {
     id: string
@@ -17,6 +18,7 @@ interface Leader {
     startup_name: string | null
     linkedin_url: string | null
     instagram_url: string | null
+    photo_url: string | null
 }
 
 export default function PublicLeadersPage() {
@@ -84,9 +86,21 @@ export default function PublicLeadersPage() {
                             
                             <CardHeader className="pt-6 pb-2">
                                 <div className="flex items-center justify-between mb-2">
-                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-amber-600 font-bold border border-amber-200 shadow-sm text-lg">
-                                        {leader.full_name.charAt(0)}
-                                    </div>
+                                    {leader.photo_url ? (
+                                        <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-stone-200 shadow-sm bg-white flex-shrink-0">
+                                            <Image
+                                                src={leader.photo_url}
+                                                alt={leader.full_name}
+                                                fill
+                                                className="object-cover"
+                                                unoptimized
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-amber-600 font-bold border border-amber-200 shadow-sm text-lg flex-shrink-0">
+                                            {leader.full_name.charAt(0)}
+                                        </div>
+                                    )}
                                     <div className="flex items-center gap-1.5">
                                         {leader.linkedin_url && (
                                             <Link 
