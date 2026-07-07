@@ -20,6 +20,8 @@ interface Leader {
     instagram_url: string | null
     photo_url: string | null
     profiles?: {
+        full_name: string | null
+        email: string
         avatar_url: string | null
     } | null
 }
@@ -34,11 +36,15 @@ export default function PublicLeadersPage() {
             try {
                 const { data, error } = await supabase
                     .from('community_leaders')
-                    .select('*, profiles(avatar_url)')
-                    .order('full_name', { ascending: true })
+                    .select('*, profiles(full_name, email, avatar_url)')
 
                 if (!error && data) {
-                    setLeaders(data)
+                    const sorted = [...data].sort((a: any, b: any) => {
+                        const nameA = a.profiles?.full_name || '';
+                        const nameB = b.profiles?.full_name || '';
+                        return nameA.localeCompare(nameB);
+                    });
+                    setLeaders(sorted)
                 }
             } catch (err) {
                 console.error(err)
@@ -87,7 +93,7 @@ export default function PublicLeadersPage() {
                                         <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-stone-200 shadow-sm bg-white flex-shrink-0">
                                             <Image
                                                 src={leader.photo_url || leader.profiles?.avatar_url!}
-                                                alt={leader.full_name}
+                                                alt={leader.profiles?.full_name || 'Avatar'}
                                                 fill
                                                 className="object-cover"
                                                 unoptimized
@@ -95,7 +101,7 @@ export default function PublicLeadersPage() {
                                         </div>
                                     ) : (
                                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-amber-600 font-bold border border-amber-200 shadow-sm text-lg flex-shrink-0">
-                                            {leader.full_name.charAt(0)}
+                                            {(leader.profiles?.full_name || 'S').charAt(0)}
                                         </div>
                                     )}
                                     <div className="flex items-center gap-1.5">
@@ -125,7 +131,7 @@ export default function PublicLeadersPage() {
                                 </div>
                                 <div className="space-y-1">
                                     <h3 className="font-bold text-lg text-stone-900 group-hover:text-amber-600 transition-colors line-clamp-1">
-                                        {leader.full_name}
+                                        {leader.profiles?.full_name || 'Sem nome'}
                                     </h3>
                                     <p className="text-xs font-semibold text-stone-500 tracking-wide uppercase">
                                         {leader.role_title}
