@@ -90,6 +90,7 @@ export function AdminLeaders() {
     }
 
     const handleOpenCreate = () => {
+        fetchProfiles()
         setEditingLeader(null)
         setFormData({
             role_title: 'Community Leader',
@@ -103,6 +104,7 @@ export function AdminLeaders() {
     }
 
     const handleOpenEdit = (leader: CommunityLeader) => {
+        fetchProfiles()
         setEditingLeader(leader)
         setFormData({
             role_title: leader.role_title,
