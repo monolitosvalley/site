@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { 
-    Users, Plus, Trash2, Edit2, CheckCircle2, Circle, 
+import {
+    Users, Plus, Trash2, Edit2, CheckCircle2, Circle,
     Linkedin, Instagram, Sparkles, Target, AlertCircle, Loader2, Image as ImageIcon
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -19,6 +19,7 @@ interface ProfileOption {
     id: string
     full_name: string | null
     email: string
+    avatar_url?: string | null
 }
 
 const CHECKLIST_ITEMS = [
@@ -39,7 +40,7 @@ export function AdminLeaders() {
     const [submitting, setSubmitting] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [editingLeader, setEditingLeader] = useState<CommunityLeader | null>(null)
-    
+
     const [selectedLeader, setSelectedLeader] = useState<CommunityLeader | null>(null)
     const [isChecklistOpen, setIsChecklistOpen] = useState(false)
 
@@ -129,7 +130,7 @@ export function AdminLeaders() {
         try {
             const url = editingLeader ? `/api/admin/leaders/${editingLeader.id}` : '/api/admin/leaders'
             const method = editingLeader ? 'PUT' : 'POST'
-            
+
             const res = await fetch(url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
@@ -215,7 +216,7 @@ export function AdminLeaders() {
                         Gerencie os líderes voluntários e acompanhe suas tarefas práticas de mercado.
                     </p>
                 </div>
-                <Button 
+                <Button
                     onClick={handleOpenCreate}
                     className="bg-[#F2CB05] hover:bg-[#d4b304] text-stone-900 font-semibold gap-2"
                 >
@@ -255,10 +256,10 @@ export function AdminLeaders() {
                                         <tr key={leader.id} className="hover:bg-stone-50/40 transition-colors">
                                             {/* Photo */}
                                             <td className="px-6 py-4">
-                                                {leader.photo_url ? (
+                                                {(leader.photo_url || (leader as any).profiles?.avatar_url) ? (
                                                     <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-stone-200 bg-white">
                                                         <Image
-                                                            src={leader.photo_url}
+                                                            src={leader.photo_url || (leader as any).profiles?.avatar_url!}
                                                             alt={leader.full_name}
                                                             fill
                                                             className="object-cover"
@@ -308,8 +309,8 @@ export function AdminLeaders() {
 
                                             {/* Actions */}
                                             <td className="px-6 py-4 text-right space-x-1.5">
-                                                <Button 
-                                                    variant="secondary" 
+                                                <Button
+                                                    variant="secondary"
                                                     size="sm"
                                                     onClick={() => {
                                                         setSelectedLeader(leader)
@@ -320,8 +321,8 @@ export function AdminLeaders() {
                                                     <Sparkles className="h-3 w-3 text-amber-500 mr-1" />
                                                     Checklist
                                                 </Button>
-                                                <Button 
-                                                    variant="outline" 
+                                                <Button
+                                                    variant="outline"
                                                     size="sm"
                                                     onClick={() => handleOpenEdit(leader)}
                                                     className="h-8 text-[10px] font-bold"
@@ -348,51 +349,66 @@ export function AdminLeaders() {
                     <form onSubmit={handleSubmit} className="space-y-4 pt-2">
                         <div className="grid gap-2">
                             <Label htmlFor="full_name">Nome Completo *</Label>
-                            <Input 
-                                id="full_name" 
-                                value={formData.full_name} 
-                                onChange={e => setFormData({ ...formData, full_name: e.target.value })} 
+                            <Input
+                                id="full_name"
+                                value={formData.full_name}
+                                onChange={e => setFormData({ ...formData, full_name: e.target.value })}
                                 placeholder="Ex: João Silva"
-                                required 
+                                required
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="email">E-mail (Opcional)</Label>
-                            <Input 
-                                id="email" 
+                            <Input
+                                id="email"
                                 type="email"
-                                value={formData.email} 
-                                onChange={e => setFormData({ ...formData, email: e.target.value })} 
-                                placeholder="Ex: joao@gmail.com" 
+                                value={formData.email}
+                                onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                placeholder="Ex: joao@gmail.com"
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="role_title">Cargo / Função *</Label>
-                            <Input 
-                                id="role_title" 
-                                value={formData.role_title} 
-                                onChange={e => setFormData({ ...formData, role_title: e.target.value })} 
-                                placeholder="Ex: Community Leader, Head de Mentoria" 
+                            <Input
+                                id="role_title"
+                                value={formData.role_title}
+                                onChange={e => setFormData({ ...formData, role_title: e.target.value })}
+                                placeholder="Ex: Community Leader, Head de Mentoria"
                                 required
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="startup_name">Startup Relacionada (Opcional)</Label>
-                            <Input 
-                                id="startup_name" 
-                                value={formData.startup_name} 
-                                onChange={e => setFormData({ ...formData, startup_name: e.target.value })} 
-                                placeholder="Ex: ApexVet" 
+                            <Input
+                                id="startup_name"
+                                value={formData.startup_name}
+                                onChange={e => setFormData({ ...formData, startup_name: e.target.value })}
+                                placeholder="Ex: ApexVet"
                             />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="photo_url">URL da Foto de Perfil (Opcional)</Label>
+                            <div className="flex justify-between items-center">
+                                <Label htmlFor="photo_url">URL da Foto de Perfil (Opcional)</Label>
+                                {profiles.find(p => p.id === formData.profile_id)?.avatar_url && (
+                                    <Button 
+                                        type="button" 
+                                        variant="link" 
+                                        className="h-auto p-0 text-[10px] font-bold text-amber-600 hover:text-amber-700"
+                                        onClick={() => {
+                                            const avatar = profiles.find(p => p.id === formData.profile_id)?.avatar_url
+                                            if (avatar) setFormData({ ...formData, photo_url: avatar })
+                                        }}
+                                    >
+                                        Puxar Avatar da Plataforma
+                                    </Button>
+                                )}
+                            </div>
                             <div className="flex gap-2">
-                                <Input 
-                                    id="photo_url" 
-                                    value={formData.photo_url} 
-                                    onChange={e => setFormData({ ...formData, photo_url: e.target.value })} 
-                                    placeholder="Ex: https://link-da-foto.jpg" 
+                                <Input
+                                    id="photo_url"
+                                    value={formData.photo_url}
+                                    onChange={e => setFormData({ ...formData, photo_url: e.target.value })}
+                                    placeholder="Ex: https://link-da-foto.jpg"
                                     className="flex-1"
                                 />
                                 {formData.photo_url && (
@@ -404,8 +420,8 @@ export function AdminLeaders() {
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="profile_id">Vincular a Usuário da Plataforma (Opcional)</Label>
-                            <select 
-                                id="profile_id" 
+                            <select
+                                id="profile_id"
                                 value={formData.profile_id}
                                 onChange={e => setFormData({ ...formData, profile_id: e.target.value })}
                                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -420,20 +436,20 @@ export function AdminLeaders() {
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="linkedin_url">LinkedIn URL (Opcional)</Label>
-                            <Input 
-                                id="linkedin_url" 
-                                value={formData.linkedin_url} 
-                                onChange={e => setFormData({ ...formData, linkedin_url: e.target.value })} 
-                                placeholder="Ex: https://linkedin.com/in/perfil" 
+                            <Input
+                                id="linkedin_url"
+                                value={formData.linkedin_url}
+                                onChange={e => setFormData({ ...formData, linkedin_url: e.target.value })}
+                                placeholder="Ex: https://linkedin.com/in/perfil"
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="instagram_url">Instagram URL (Opcional)</Label>
-                            <Input 
-                                id="instagram_url" 
-                                value={formData.instagram_url} 
-                                onChange={e => setFormData({ ...formData, instagram_url: e.target.value })} 
-                                placeholder="Ex: https://instagram.com/perfil" 
+                            <Input
+                                id="instagram_url"
+                                value={formData.instagram_url}
+                                onChange={e => setFormData({ ...formData, instagram_url: e.target.value })}
+                                placeholder="Ex: https://instagram.com/perfil"
                             />
                         </div>
                         <DialogFooter>
@@ -456,9 +472,9 @@ export function AdminLeaders() {
                                         <DialogTitle className="text-xl font-bold">{selectedLeader.full_name}</DialogTitle>
                                         <p className="text-xs text-muted-foreground">{selectedLeader.role_title}</p>
                                     </div>
-                                    <Button 
-                                        variant="destructive" 
-                                        size="icon" 
+                                    <Button
+                                        variant="destructive"
+                                        size="icon"
                                         className="h-8 w-8 opacity-70 hover:opacity-100"
                                         onClick={() => handleDeleteLeader(selectedLeader.id)}
                                     >
@@ -509,14 +525,6 @@ export function AdminLeaders() {
                                                 </button>
                                             )
                                         })}
-                                    </div>
-                                </div>
-
-                                {/* Mentalidade Warning */}
-                                <div className="bg-amber-50/50 border border-amber-200/80 rounded-lg p-3 flex gap-2">
-                                    <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                                    <div className="text-xs text-amber-900 leading-relaxed">
-                                        <span className="font-bold">Dica de Acompanhamento:</span> A maioria dos jovens líderes ainda foca muito em prêmios de hackathons ou PowerPoints acadêmicos. Incentive-os a preencher os itens de Mercado e Redes para expor seu perfil de fundador e conectar a startup ao mundo real.
                                     </div>
                                 </div>
                             </div>

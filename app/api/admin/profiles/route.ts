@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     // Fetch all profiles
     const { data: profiles, error: profilesError } = await serviceClient
       .from("profiles")
-      .select("id, full_name, email")
+      .select("id, full_name, email, avatar_url")
       .order("full_name", { ascending: true })
 
     if (profilesError) {

@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { 
-    Users, Linkedin, Instagram, Sparkles, MapPin, 
-    ArrowUpRight, Loader2, Award 
+import {
+    Users, Linkedin, Instagram, Sparkles, MapPin,
+    ArrowUpRight, Loader2, Award
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
@@ -59,17 +59,11 @@ export default function PublicLeadersPage() {
         <div className="container mx-auto px-4 py-12 max-w-7xl">
             {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-                <Badge className="bg-amber-100 text-amber-800 border border-amber-300 font-semibold px-3 py-1 text-xs rounded-full">
-                    ⭐ Time de Guardiões
-                </Badge>
+
                 <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-stone-900">
                     Lideranças da Comunidade
                 </h1>
-                <p className="text-lg text-stone-600">
-                    Conheça os voluntários que lideram iniciativas, apoiam startups locais e ajudam a impulsionar o ecossistema do Sertão Central.
-                </p>
             </div>
-
             {leaders.length === 0 ? (
                 <Card className="max-w-md mx-auto">
                     <CardContent className="py-12 text-center">
@@ -83,7 +77,7 @@ export default function PublicLeadersPage() {
                         <Card key={leader.id} className="relative group overflow-hidden border border-stone-200/80 bg-white hover:shadow-xl hover:border-amber-400/40 transition-all duration-300 flex flex-col justify-between">
                             {/* Decorative badge header */}
                             <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-400 to-orange-500" />
-                            
+
                             <CardHeader className="pt-6 pb-2">
                                 <div className="flex items-center justify-between mb-2">
                                     {leader.photo_url ? (
@@ -103,10 +97,10 @@ export default function PublicLeadersPage() {
                                     )}
                                     <div className="flex items-center gap-1.5">
                                         {leader.linkedin_url && (
-                                            <Link 
-                                                href={leader.linkedin_url} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer" 
+                                            <Link
+                                                href={leader.linkedin_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 className="text-stone-400 hover:text-blue-600 transition-colors p-1"
                                                 title="LinkedIn"
                                             >
@@ -114,10 +108,10 @@ export default function PublicLeadersPage() {
                                             </Link>
                                         )}
                                         {leader.instagram_url && (
-                                            <Link 
-                                                href={leader.instagram_url} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer" 
+                                            <Link
+                                                href={leader.instagram_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 className="text-stone-400 hover:text-pink-600 transition-colors p-1"
                                                 title="Instagram"
                                             >
