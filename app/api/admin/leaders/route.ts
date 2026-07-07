@@ -61,10 +61,13 @@ export async function POST(request: NextRequest) {
     }
 
     if (avatar_url !== undefined) {
-      await auth.serviceClient!
+      const { error: profileError } = await auth.serviceClient!
         .from("profiles")
         .update({ avatar_url })
         .eq("id", profile_id)
+      if (profileError) {
+        console.error("Profile avatar update error in POST:", profileError)
+      }
     }
 
     const { data: leader, error: insertError } = await auth.serviceClient!

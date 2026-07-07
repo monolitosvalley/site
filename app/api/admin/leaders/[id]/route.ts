@@ -66,10 +66,13 @@ export async function PUT(
       ).data?.profile_id
 
       if (finalProfileId) {
-        await auth.serviceClient!
+        const { error: profileError } = await auth.serviceClient!
           .from("profiles")
           .update({ avatar_url })
           .eq("id", finalProfileId)
+        if (profileError) {
+          console.error("Profile avatar update error in PUT:", profileError)
+        }
       }
     }
 
