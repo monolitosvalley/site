@@ -39,6 +39,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Dados da startup são obrigatórios" }, { status: 400 })
     }
 
+    // Validate startup data BEFORE inviting/creating users to avoid half-created state
+    let validatedStartup;
+    try {
+      validatedStartup = startupSchema.parse(startupData)
+    } catch (validationError: any) {
+      const firstError = validationError.errors?.[0]
+      return NextResponse.json(
+        { error: firstError?.message || "Dados da startup são inválidos" },
+        { status: 400 }
+      )
+    }
+
     let finalOwnerId = owner_id
 
     // 1. Handle Owner Linking/Inviting
@@ -110,34 +122,23 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 2. Validate and Create Startup
-    try {
-      const validatedStartup = startupSchema.parse(startupData)
+    // 2. Create Startup
+    const { data, error: startupError } = await serviceClient
+      .from("startups")
+      .insert({
+        ...validatedStartup,
+        owner_id: finalOwnerId,
+        approved: true // Automatically approved since it is created by admin
+      })
+      .select()
+      .single()
 
-      // Create new startup
-      const { data, error: startupError } = await serviceClient
-        .from("startups")
-        .insert({
-          ...validatedStartup,
-          owner_id: finalOwnerId,
-          approved: true // Automatically approved since it is created by admin
-        })
-        .select()
-        .single()
-
-      if (startupError) {
-        console.error("Startup create error:", startupError)
-        return NextResponse.json({ error: "Erro ao criar startup no banco de dados" }, { status: 500 })
-      }
-
-      return NextResponse.json({ success: true, startup: data })
-    } catch (validationError: any) {
-      const firstError = validationError.errors?.[0]
-      return NextResponse.json(
-        { error: firstError?.message || "Dados da startup são inválidos" },
-        { status: 400 }
-      )
+    if (startupError) {
+      console.error("Startup create error:", startupError)
+      return NextResponse.json({ error: "Erro ao criar startup no banco de dados" }, { status: 500 })
     }
+
+    return NextResponse.json({ success: true, startup: data })
   } catch (error) {
     console.error("Unexpected error in POST startups:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })
