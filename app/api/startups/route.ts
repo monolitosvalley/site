@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     const estagio_maturidade = searchParams.get("estagio_maturidade")
     const is_esg = searchParams.get("is_esg")
     const cidade = searchParams.get("cidade")
+    const search = searchParams.get("search")
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "10")
 
@@ -51,6 +52,10 @@ export async function GET(request: NextRequest) {
 
     if (is_esg === "true") {
       query = query.eq("is_esg", true)
+    }
+
+    if (search) {
+      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`)
     }
 
     // Apply pagination

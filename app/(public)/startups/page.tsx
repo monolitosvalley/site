@@ -5,8 +5,7 @@ import { Startup } from '@/types/database'
 import { StartupGrid } from '@/components/features/startups/StartupGrid'
 import { StartupFilters, StartupFilters as Filters } from '@/components/features/startups/StartupFilters'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChevronLeft, ChevronRight, Grid3x3, Map } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
 const StartupMap = dynamic(
@@ -18,6 +17,7 @@ export default function StartupsPage() {
     const [startups, setStartups] = useState<Startup[]>([])
     const [loading, setLoading] = useState(true)
     const [filters, setFilters] = useState<Filters>({})
+    const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid')
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
 
@@ -34,6 +34,7 @@ export default function StartupsPage() {
                 if (filters.estagio_maturidade) params.append('estagio_maturidade', filters.estagio_maturidade)
                 if (filters.is_esg) params.append('is_esg', 'true')
                 if (filters.cidade) params.append('cidade', filters.cidade)
+                if (filters.search) params.append('search', filters.search)
 
                 const res = await fetch(`/api/startups?${params}`)
                 if (res.ok) {
@@ -57,43 +58,33 @@ export default function StartupsPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="mb-8">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+            <div className="mb-6">
                 <h1 className="text-4xl font-bold mb-2">Startups</h1>
                 <p className="text-muted-foreground">
                     Conheça as startups que estão transformando o Sertão Central Cearense
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                <aside className="lg:col-span-1">
-                    <StartupFilters filters={filters} onFilterChange={handleFilterChange} />
-                </aside>
+            <div className="space-y-6">
+                {/* Horizontal Top Filters */}
+                <StartupFilters 
+                    filters={filters} 
+                    onFilterChange={handleFilterChange} 
+                    viewMode={viewMode}
+                    onViewModeChange={setViewMode}
+                />
 
-                <main className="lg:col-span-3">
-                    <Tabs defaultValue="grid" className="w-full">
-                        <TabsList className="mb-6">
-                            <TabsTrigger value="grid" className="flex items-center gap-2">
-                                <Grid3x3 className="h-4 w-4" />
-                                Grade
-                            </TabsTrigger>
-                            <TabsTrigger value="map" className="flex items-center gap-2">
-                                <Map className="h-4 w-4" />
-                                Mapa
-                            </TabsTrigger>
-                        </TabsList>
-
-                        <TabsContent value="grid">
-                            <StartupGrid startups={startups} loading={loading} />
-                        </TabsContent>
-
-                        <TabsContent value="map">
-                            <StartupMap startups={startups} />
-                        </TabsContent>
-                    </Tabs>
+                {/* Main Content Area */}
+                <main className="w-full">
+                    {viewMode === 'grid' ? (
+                        <StartupGrid startups={startups} loading={loading} />
+                    ) : (
+                        <StartupMap startups={startups} />
+                    )}
 
                     {/* Pagination */}
-                    {totalPages > 1 && !loading && (
+                    {viewMode === 'grid' && totalPages > 1 && !loading && (
                         <div className="flex items-center justify-center gap-2 mt-8">
                             <Button
                                 variant="outline"
