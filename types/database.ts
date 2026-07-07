@@ -140,3 +140,23 @@ export interface TeamMember {
   created_at: string
   updated_at: string
 }
+
+export interface CommunityLeader {
+  id: string
+  profile_id: string | null
+  full_name: string
+  email: string | null
+  role_title: string
+  startup_name: string | null
+  linkedin_url: string | null
+  instagram_url: string | null
+  checklist: string[] // Array of completed task IDs
+  monthly_engagement: {
+    month: string // e.g. "2026-07"
+    completed: string[] // List of monthly tasks completed
+    retro: string | null
+  }[]
+  created_at: string
+  updated_at: string
+}
+

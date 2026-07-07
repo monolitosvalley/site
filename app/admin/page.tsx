@@ -13,6 +13,7 @@ import { OpportunityForm } from '@/components/admin/OpportunityForm'
 import { EventForm } from '@/components/admin/EventForm'
 import { BlogPostForm } from '@/components/admin/BlogPostForm'
 import { PartnerForm } from '@/components/admin/PartnerForm'
+import { AdminLeaders } from '@/components/admin/AdminLeaders'
 
 interface PendingItem {
     id: string
@@ -222,6 +223,7 @@ export default function AdminPage() {
                         <TabsTrigger value="startups">
                             Startups {currentData.startups.length > 0 && <Badge className="ml-2">{currentData.startups.length}</Badge>}
                         </TabsTrigger>
+                        <TabsTrigger value="leaders">Lideranças</TabsTrigger>
                     </TabsList>
                 </div>
 
@@ -340,7 +342,9 @@ export default function AdminPage() {
                     </TabsContent>
                 ))}
 
-
+                <TabsContent value="leaders" className="mt-6">
+                    <AdminLeaders />
+                </TabsContent>
             </Tabs>
         </div>
     )
