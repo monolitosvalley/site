@@ -25,9 +25,10 @@ async function checkAdmin() {
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const auth = await checkAdmin()
     if (auth.error) {
       return NextResponse.json({ error: auth.error }, { status: auth.status })
@@ -62,7 +63,7 @@ export async function PUT(
     const { data: leader, error: updateError } = await auth.serviceClient!
       .from("community_leaders")
       .update(updateData)
-      .eq("id", params.id)
+      .eq("id", id)
       .select()
       .single()
 
@@ -80,9 +81,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const auth = await checkAdmin()
     if (auth.error) {
       return NextResponse.json({ error: auth.error }, { status: auth.status })
@@ -91,7 +93,7 @@ export async function DELETE(
     const { error: deleteError } = await auth.serviceClient!
       .from("community_leaders")
       .delete()
-      .eq("id", params.id)
+      .eq("id", id)
 
     if (deleteError) {
       console.error("Leaders delete error:", deleteError)
