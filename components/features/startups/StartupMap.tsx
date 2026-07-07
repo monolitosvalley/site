@@ -25,14 +25,14 @@ const ESTAGIO_LABELS: Record<string, string> = {
     crescimento: 'Crescimento',
 }
 
-// Custom marker icon usando o logo do Monólitos Valley
-const createCustomIcon = () => {
+// Custom marker icon usando o logo da startup (ou padrão da Monólitos Valley)
+const createCustomIcon = (logoUrl?: string | null) => {
     return new Icon({
-        iconUrl: '/monolitos-valley-logo.svg',
-        iconSize: [32, 32], // Tamanho menor para ter espaço do padding
-        iconAnchor: [24, 48], // Ajustado para o centro do círculo maior
-        popupAnchor: [0, -48],
-        className: 'custom-marker-icon'
+        iconUrl: logoUrl || '/monolitos-valley-logo.svg',
+        iconSize: [40, 40], // Ajustado para dar destaque ao logo
+        iconAnchor: [20, 20], // Centralizado
+        popupAnchor: [0, -20],
+        className: 'custom-marker-icon object-contain'
     })
 }
 
@@ -103,14 +103,14 @@ export function StartupMap({ startups }: StartupMapProps) {
                     <Marker
                         key={startup.id}
                         position={[startup.latitude!, startup.longitude!]}
-                        icon={createCustomIcon()}
+                        icon={createCustomIcon(startup.logo_url)}
                     >
                         <Popup maxWidth={400} className="startup-popup">
                             <div className="p-3 min-w-[350px] max-w-[400px]">
                                 {/* Header */}
                                 <div className="mb-3">
                                     <h3 className="font-bold text-lg mb-1">{startup.name}</h3>
-                                    {startup.cnpj && (
+                                    {startup.cnpj && startup.cnpj.replace(/\D/g, '') !== '00000000000000' && startup.cnpj.trim() !== '' && (
                                         <p className="text-xs text-stone-600 mb-2">CNPJ: {formatCNPJ(startup.cnpj)}</p>
                                     )}
                                     <div className="flex flex-wrap gap-1">

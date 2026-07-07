@@ -112,7 +112,7 @@ export function StartupDetailsModal({
                             {/* Title and info on the right */}
                             <div className="flex-1 min-w-0 sm:pt-8">
                                 <DialogTitle className="text-2xl mb-1">{startup.name}</DialogTitle>
-                                {startup.cnpj && (
+                                {startup.cnpj && startup.cnpj.replace(/\D/g, '') !== '00000000000000' && startup.cnpj.trim() !== '' && (
                                     <p className="text-xs text-muted-foreground mb-2">CNPJ: {formatCNPJ(startup.cnpj)}</p>
                                 )}
                                 <div className="flex flex-wrap gap-2">
