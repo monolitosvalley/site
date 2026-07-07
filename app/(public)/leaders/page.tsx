@@ -19,6 +19,9 @@ interface Leader {
     linkedin_url: string | null
     instagram_url: string | null
     photo_url: string | null
+    profiles?: {
+        avatar_url: string | null
+    } | null
 }
 
 export default function PublicLeadersPage() {
@@ -31,7 +34,7 @@ export default function PublicLeadersPage() {
             try {
                 const { data, error } = await supabase
                     .from('community_leaders')
-                    .select('*')
+                    .select('*, profiles(avatar_url)')
                     .order('full_name', { ascending: true })
 
                 if (!error && data) {
@@ -80,10 +83,10 @@ export default function PublicLeadersPage() {
 
                             <CardHeader className="pt-6 pb-2">
                                 <div className="flex items-center justify-between mb-2">
-                                    {leader.photo_url ? (
+                                    {(leader.photo_url || leader.profiles?.avatar_url) ? (
                                         <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-stone-200 shadow-sm bg-white flex-shrink-0">
                                             <Image
-                                                src={leader.photo_url}
+                                                src={leader.photo_url || leader.profiles?.avatar_url!}
                                                 alt={leader.full_name}
                                                 fill
                                                 className="object-cover"

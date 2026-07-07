@@ -32,8 +32,7 @@ export async function GET(request: NextRequest) {
 
     const { data: leaders, error: fetchError } = await auth.serviceClient!
       .from("community_leaders")
-      .select("*")
-      .order("full_name", { ascending: true })
+      .select("*, profiles(full_name, email, avatar_url)")
 
     if (fetchError) {
       console.error("Leaders fetch error:", fetchError)
@@ -55,27 +54,31 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { full_name, email, role_title, startup_name, linkedin_url, instagram_url, photo_url, profile_id } = body
+    const { role_title, startup_name, linkedin_url, instagram_url, profile_id, avatar_url } = body
 
-    if (!full_name || !role_title) {
-      return NextResponse.json({ error: "Nome completo e cargo são obrigatórios" }, { status: 400 })
+    if (!profile_id || !role_title) {
+      return NextResponse.json({ error: "Perfil e cargo são obrigatórios" }, { status: 400 })
+    }
+
+    if (avatar_url !== undefined) {
+      await auth.serviceClient!
+        .from("profiles")
+        .update({ avatar_url })
+        .eq("id", profile_id)
     }
 
     const { data: leader, error: insertError } = await auth.serviceClient!
       .from("community_leaders")
       .insert({
-        full_name,
-        email: email || null,
         role_title,
         startup_name: startup_name || null,
         linkedin_url: linkedin_url || null,
         instagram_url: instagram_url || null,
-        photo_url: photo_url || null,
-        profile_id: profile_id || null,
+        profile_id,
         checklist: [],
         monthly_engagement: []
       })
-      .select()
+      .select("*, profiles(full_name, email, avatar_url)")
       .single()
 
     if (insertError) {

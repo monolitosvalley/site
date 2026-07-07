@@ -7,9 +7,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import {
-    Users, Plus, Trash2, Edit2, CheckCircle2, Circle,
-    Linkedin, Instagram, Sparkles, Target, AlertCircle, Loader2, Image as ImageIcon
+import { 
+    Users, Plus, Trash2, Edit2, CheckCircle2, Circle, 
+    Linkedin, Instagram, Sparkles, Target, Loader2, Image as ImageIcon
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { CommunityLeader } from '@/types/database'
@@ -38,16 +38,15 @@ export function AdminLeaders() {
     const [profiles, setProfiles] = useState<ProfileOption[]>([])
     const [loading, setLoading] = useState(true)
     const [submitting, setSubmitting] = useState(false)
+    const [uploading, setUploading] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [editingLeader, setEditingLeader] = useState<CommunityLeader | null>(null)
-
+    
     const [selectedLeader, setSelectedLeader] = useState<CommunityLeader | null>(null)
     const [isChecklistOpen, setIsChecklistOpen] = useState(false)
 
     // Form states
     const [formData, setFormData] = useState({
-        full_name: '',
-        email: '',
         role_title: 'Community Leader',
         startup_name: '',
         linkedin_url: '',
@@ -93,8 +92,6 @@ export function AdminLeaders() {
     const handleOpenCreate = () => {
         setEditingLeader(null)
         setFormData({
-            full_name: '',
-            email: '',
             role_title: 'Community Leader',
             startup_name: '',
             linkedin_url: '',
@@ -108,42 +105,74 @@ export function AdminLeaders() {
     const handleOpenEdit = (leader: CommunityLeader) => {
         setEditingLeader(leader)
         setFormData({
-            full_name: leader.full_name,
-            email: leader.email || '',
             role_title: leader.role_title,
             startup_name: leader.startup_name || '',
             linkedin_url: leader.linkedin_url || '',
             instagram_url: leader.instagram_url || '',
-            photo_url: leader.photo_url || '',
-            profile_id: leader.profile_id || ''
+            photo_url: leader.profiles?.avatar_url || '',
+            profile_id: leader.profile_id
         })
         setIsDialogOpen(true)
     }
 
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+        setUploading(true)
+        try {
+            const uploadFormData = new FormData()
+            uploadFormData.append('file', file)
+            uploadFormData.append('bucket', 'avatars')
+            
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: uploadFormData
+            })
+            const data = await res.json()
+            if (res.ok && data.url) {
+                setFormData(prev => ({ ...prev, photo_url: data.url }))
+                toast.success("Foto enviada com sucesso!")
+            } else {
+                toast.error(data.error || "Erro no upload")
+            }
+        } catch (err) {
+            console.error(err)
+            toast.error("Erro ao enviar arquivo")
+        } finally {
+            setUploading(false)
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!formData.full_name || !formData.role_title) {
-            toast.error("Preencha nome completo e cargo")
+        if (!formData.profile_id || !formData.role_title) {
+            toast.error("Preencha perfil de usuário e cargo")
             return
         }
         setSubmitting(true)
         try {
             const url = editingLeader ? `/api/admin/leaders/${editingLeader.id}` : '/api/admin/leaders'
             const method = editingLeader ? 'PUT' : 'POST'
+            
+            const payload = {
+                role_title: formData.role_title,
+                startup_name: formData.startup_name || null,
+                linkedin_url: formData.linkedin_url || null,
+                instagram_url: formData.instagram_url || null,
+                profile_id: formData.profile_id,
+                avatar_url: formData.photo_url || undefined
+            }
 
             const res = await fetch(url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             })
             const data = await res.json()
             if (res.ok) {
                 toast.success(editingLeader ? "Liderança atualizada!" : "Liderança adicionada com sucesso!")
-                if (editingLeader) {
-                    setLeaders(leaders.map(l => l.id === editingLeader.id ? data.data : l).sort((a, b) => a.full_name.localeCompare(b.full_name)))
-                } else {
-                    setLeaders([...leaders, data.data].sort((a, b) => a.full_name.localeCompare(b.full_name)))
-                }
+                // Refresh list of leaders
+                fetchLeaders()
                 setIsDialogOpen(false)
             } else {
                 toast.error(data.error || "Erro ao processar requisição")
@@ -198,14 +227,7 @@ export function AdminLeaders() {
         }
     }
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-amber-500 mb-2" />
-                <p className="text-muted-foreground text-sm">Carregando lista de lideranças...</p>
-            </div>
-        )
-    }
+    const selectedUser = profiles.find(p => p.id === formData.profile_id)
 
     return (
         <div className="space-y-6">
@@ -216,7 +238,7 @@ export function AdminLeaders() {
                         Gerencie os líderes voluntários e acompanhe suas tarefas práticas de mercado.
                     </p>
                 </div>
-                <Button
+                <Button 
                     onClick={handleOpenCreate}
                     className="bg-[#F2CB05] hover:bg-[#d4b304] text-stone-900 font-semibold gap-2"
                 >
@@ -251,16 +273,18 @@ export function AdminLeaders() {
                                     const completedCount = leader.checklist?.length || 0
                                     const totalCount = CHECKLIST_ITEMS.length
                                     const pct = Math.round((completedCount / totalCount) * 100)
+                                    const fullName = leader.profiles?.full_name || 'Sem nome cadastrado'
+                                    const email = leader.profiles?.email || 'Sem email'
 
                                     return (
                                         <tr key={leader.id} className="hover:bg-stone-50/40 transition-colors">
                                             {/* Photo */}
                                             <td className="px-6 py-4">
-                                                {(leader.photo_url || (leader as any).profiles?.avatar_url) ? (
+                                                {leader.profiles?.avatar_url ? (
                                                     <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-stone-200 bg-white">
                                                         <Image
-                                                            src={leader.photo_url || (leader as any).profiles?.avatar_url!}
-                                                            alt={leader.full_name}
+                                                            src={leader.profiles.avatar_url}
+                                                            alt={fullName}
                                                             fill
                                                             className="object-cover"
                                                             unoptimized
@@ -268,7 +292,7 @@ export function AdminLeaders() {
                                                     </div>
                                                 ) : (
                                                     <div className="w-10 h-10 rounded-lg bg-amber-100 text-amber-800 font-bold border border-amber-200 flex items-center justify-center text-sm shadow-sm">
-                                                        {leader.full_name.charAt(0)}
+                                                        {fullName.charAt(0)}
                                                     </div>
                                                 )}
                                             </td>
@@ -276,8 +300,8 @@ export function AdminLeaders() {
                                             {/* Name */}
                                             <td className="px-6 py-4 font-bold text-stone-900">
                                                 <div className="flex flex-col">
-                                                    <span>{leader.full_name}</span>
-                                                    <span className="text-[10px] text-stone-400 font-normal">{leader.email || 'Sem email'}</span>
+                                                    <span>{fullName}</span>
+                                                    <span className="text-[10px] text-stone-400 font-normal">{email}</span>
                                                 </div>
                                             </td>
 
@@ -309,8 +333,8 @@ export function AdminLeaders() {
 
                                             {/* Actions */}
                                             <td className="px-6 py-4 text-right space-x-1.5">
-                                                <Button
-                                                    variant="secondary"
+                                                <Button 
+                                                    variant="secondary" 
                                                     size="sm"
                                                     onClick={() => {
                                                         setSelectedLeader(leader)
@@ -321,8 +345,8 @@ export function AdminLeaders() {
                                                     <Sparkles className="h-3 w-3 text-amber-500 mr-1" />
                                                     Checklist
                                                 </Button>
-                                                <Button
-                                                    variant="outline"
+                                                <Button 
+                                                    variant="outline" 
                                                     size="sm"
                                                     onClick={() => handleOpenEdit(leader)}
                                                     className="h-8 text-[10px] font-bold"
@@ -347,26 +371,70 @@ export function AdminLeaders() {
                         <DialogTitle>{editingLeader ? "Editar Liderança" : "Adicionar Nova Liderança"}</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+                        {/* 1. Escolha de Perfil de Usuário */}
                         <div className="grid gap-2">
-                            <Label htmlFor="full_name">Nome Completo *</Label>
-                            <Input
-                                id="full_name"
-                                value={formData.full_name}
-                                onChange={e => setFormData({ ...formData, full_name: e.target.value })}
-                                placeholder="Ex: João Silva"
+                            <Label htmlFor="profile_id">Usuário da Plataforma *</Label>
+                            <select
+                                id="profile_id"
+                                value={formData.profile_id}
+                                onChange={e => setFormData({ ...formData, profile_id: e.target.value })}
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 required
-                            />
+                                disabled={!!editingLeader}
+                            >
+                                <option value="">Selecione um usuário...</option>
+                                {profiles.map(p => (
+                                    <option key={p.id} value={p.id}>
+                                        {p.full_name || p.email} ({p.email})
+                                    </option>
+                                ))}
+                            </select>
                         </div>
+
+                        {/* Selected user preview card */}
+                        {selectedUser && (
+                            <div className="bg-stone-50 border rounded-lg p-3 flex items-center gap-3">
+                                {formData.photo_url || selectedUser.avatar_url ? (
+                                    <div className="relative w-12 h-12 rounded-lg overflow-hidden border bg-white flex-shrink-0">
+                                        <Image 
+                                            src={formData.photo_url || selectedUser.avatar_url!} 
+                                            alt="Avatar" 
+                                            fill 
+                                            className="object-cover" 
+                                            unoptimized 
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="w-12 h-12 rounded-lg bg-amber-100 text-amber-800 font-bold border border-amber-200 flex items-center justify-center text-sm shadow-sm flex-shrink-0">
+                                        {(selectedUser.full_name || selectedUser.email).charAt(0)}
+                                    </div>
+                                )}
+                                <div className="text-xs space-y-0.5 min-w-0">
+                                    <p className="font-bold text-stone-900 truncate">{selectedUser.full_name || 'Sem nome cadastrado'}</p>
+                                    <p className="text-stone-400 truncate">{selectedUser.email}</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* File image upload */}
                         <div className="grid gap-2">
-                            <Label htmlFor="email">E-mail (Opcional)</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                value={formData.email}
-                                onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                placeholder="Ex: joao@gmail.com"
-                            />
+                            <Label htmlFor="avatar_file">Foto de Perfil (Atualizar Avatar da Conta)</Label>
+                            <div className="flex items-center gap-3">
+                                <Input
+                                    id="avatar_file"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleAvatarUpload}
+                                    disabled={uploading || !formData.profile_id}
+                                    className="flex-1 text-xs file:bg-stone-100 file:border-0 file:rounded-md file:text-xs"
+                                />
+                                {uploading && <Loader2 className="w-5 h-5 animate-spin text-amber-500 flex-shrink-0" />}
+                            </div>
+                            <p className="text-[10px] text-stone-400">
+                                Envie uma imagem para atualizar diretamente o avatar de usuário na plataforma.
+                            </p>
                         </div>
+
                         <div className="grid gap-2">
                             <Label htmlFor="role_title">Cargo / Função *</Label>
                             <Input
@@ -387,54 +455,6 @@ export function AdminLeaders() {
                             />
                         </div>
                         <div className="grid gap-2">
-                            <div className="flex justify-between items-center">
-                                <Label htmlFor="photo_url">URL da Foto de Perfil (Opcional)</Label>
-                                {profiles.find(p => p.id === formData.profile_id)?.avatar_url && (
-                                    <Button 
-                                        type="button" 
-                                        variant="link" 
-                                        className="h-auto p-0 text-[10px] font-bold text-amber-600 hover:text-amber-700"
-                                        onClick={() => {
-                                            const avatar = profiles.find(p => p.id === formData.profile_id)?.avatar_url
-                                            if (avatar) setFormData({ ...formData, photo_url: avatar })
-                                        }}
-                                    >
-                                        Puxar Avatar da Plataforma
-                                    </Button>
-                                )}
-                            </div>
-                            <div className="flex gap-2">
-                                <Input
-                                    id="photo_url"
-                                    value={formData.photo_url}
-                                    onChange={e => setFormData({ ...formData, photo_url: e.target.value })}
-                                    placeholder="Ex: https://link-da-foto.jpg"
-                                    className="flex-1"
-                                />
-                                {formData.photo_url && (
-                                    <div className="relative w-10 h-10 border rounded-lg overflow-hidden flex-shrink-0 bg-stone-50">
-                                        <Image src={formData.photo_url} alt="Preview" fill className="object-cover" unoptimized />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="profile_id">Vincular a Usuário da Plataforma (Opcional)</Label>
-                            <select
-                                id="profile_id"
-                                value={formData.profile_id}
-                                onChange={e => setFormData({ ...formData, profile_id: e.target.value })}
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                                <option value="">Não vincular / Criar perfil isolado</option>
-                                {profiles.map(p => (
-                                    <option key={p.id} value={p.id}>
-                                        {p.full_name || p.email} ({p.email})
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="grid gap-2">
                             <Label htmlFor="linkedin_url">LinkedIn URL (Opcional)</Label>
                             <Input
                                 id="linkedin_url"
@@ -453,7 +473,7 @@ export function AdminLeaders() {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type="submit" disabled={submitting}>
+                            <Button type="submit" disabled={submitting || uploading}>
                                 {submitting ? "Processando..." : "Salvar Alterações"}
                             </Button>
                         </DialogFooter>
@@ -469,7 +489,7 @@ export function AdminLeaders() {
                             <DialogHeader>
                                 <div className="flex justify-between items-start pr-6">
                                     <div>
-                                        <DialogTitle className="text-xl font-bold">{selectedLeader.full_name}</DialogTitle>
+                                        <DialogTitle className="text-xl font-bold">{selectedLeader.profiles?.full_name || 'Sem nome'}</DialogTitle>
                                         <p className="text-xs text-muted-foreground">{selectedLeader.role_title}</p>
                                     </div>
                                     <Button
@@ -492,7 +512,7 @@ export function AdminLeaders() {
                                     </div>
                                     <div>
                                         <p className="font-semibold text-stone-500">E-mail</p>
-                                        <p className="font-medium text-stone-900 truncate">{selectedLeader.email || 'Não informado'}</p>
+                                        <p className="font-medium text-stone-900 truncate">{selectedLeader.profiles?.email || 'Não informado'}</p>
                                     </div>
                                 </div>
 

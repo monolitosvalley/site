@@ -36,37 +36,48 @@ export async function PUT(
 
     const body = await request.json()
     const {
-      full_name,
-      email,
       role_title,
       startup_name,
       linkedin_url,
       instagram_url,
-      photo_url,
       profile_id,
       checklist,
-      monthly_engagement
+      monthly_engagement,
+      avatar_url
     } = body
 
     const updateData: any = {}
-    if (full_name !== undefined) updateData.full_name = full_name
-    if (email !== undefined) updateData.email = email || null
     if (role_title !== undefined) updateData.role_title = role_title
     if (startup_name !== undefined) updateData.startup_name = startup_name || null
     if (linkedin_url !== undefined) updateData.linkedin_url = linkedin_url || null
     if (instagram_url !== undefined) updateData.instagram_url = instagram_url || null
-    if (photo_url !== undefined) updateData.photo_url = photo_url || null
-    if (profile_id !== undefined) updateData.profile_id = profile_id || null
+    if (profile_id !== undefined) updateData.profile_id = profile_id
     if (checklist !== undefined) updateData.checklist = checklist
     if (monthly_engagement !== undefined) updateData.monthly_engagement = monthly_engagement
 
     updateData.updated_at = new Date().toISOString()
 
+    if (avatar_url !== undefined) {
+      const finalProfileId = profile_id || (await auth.serviceClient!
+        .from("community_leaders")
+        .select("profile_id")
+        .eq("id", id)
+        .single()
+      ).data?.profile_id
+
+      if (finalProfileId) {
+        await auth.serviceClient!
+          .from("profiles")
+          .update({ avatar_url })
+          .eq("id", finalProfileId)
+      }
+    }
+
     const { data: leader, error: updateError } = await auth.serviceClient!
       .from("community_leaders")
       .update(updateData)
       .eq("id", id)
-      .select()
+      .select("*, profiles(full_name, email, avatar_url)")
       .single()
 
     if (updateError) {
