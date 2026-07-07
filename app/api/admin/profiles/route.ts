@@ -43,22 +43,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Erro ao buscar perfis" }, { status: 500 })
     }
 
-    // Fetch all startups to find which ones are already linked
-    const { data: startups, error: startupsError } = await serviceClient
-      .from("startups")
-      .select("owner_id")
-
-    if (startupsError) {
-      console.error("Startups fetch error:", startupsError)
-      return NextResponse.json({ error: "Erro ao buscar startups" }, { status: 500 })
-    }
-
-    const ownedUserIds = new Set(startups?.map(s => s.owner_id) || [])
-    
-    // Filter profiles that do not own any startup
-    const availableProfiles = (profiles || []).filter(p => !ownedUserIds.has(p.id))
-
-    return NextResponse.json({ data: availableProfiles })
+    return NextResponse.json({ data: profiles || [] })
   } catch (error) {
     console.error("Unexpected error in GET profiles:", error)
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 })

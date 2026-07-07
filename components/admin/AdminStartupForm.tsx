@@ -62,7 +62,7 @@ export function AdminStartupForm() {
     const [searchQuery, setSearchQuery] = useState('')
     
     // Form Owner settings
-    const [ownerType, setOwnerType] = useState<'existing' | 'invite'>('existing')
+    const [ownerType, setOwnerType] = useState<'existing' | 'invite' | 'none'>('existing')
     const [selectedOwnerId, setSelectedOwnerId] = useState('')
     const [inviteEmail, setInviteEmail] = useState('')
     const [inviteName, setInviteName] = useState('')
@@ -325,11 +325,20 @@ export function AdminStartupForm() {
                         <UserPlus className="w-4 h-4" />
                         Convidar Novo Usuário
                     </Button>
+                    <Button
+                        type="button"
+                        variant={ownerType === 'none' ? 'default' : 'outline'}
+                        className="flex-1 gap-2"
+                        onClick={() => setOwnerType('none')}
+                    >
+                        <X className="w-4 h-4" />
+                        Sem Proprietário
+                    </Button>
                 </div>
 
-                {ownerType === 'existing' ? (
+                {ownerType === 'existing' && (
                     <div className="space-y-3 pt-2">
-                        <Label htmlFor="search-user">Buscar Usuário Existente (Sem Startup)</Label>
+                        <Label htmlFor="search-user">Buscar Usuário Existente</Label>
                         <div className="relative">
                             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                             <Input
@@ -377,7 +386,9 @@ export function AdminStartupForm() {
                             </div>
                         )}
                     </div>
-                ) : (
+                )}
+
+                {ownerType === 'invite' && (
                     <div className="space-y-4 pt-2 border-t">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">

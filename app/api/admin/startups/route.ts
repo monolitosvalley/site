@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    let finalOwnerId = owner_id
+    let finalOwnerId = owner_id || null
 
     // 1. Handle Owner Linking/Inviting
     if (owner_type === "invite") {
@@ -104,21 +104,6 @@ export async function POST(request: NextRequest) {
       if (profileError) {
         console.error("Error upserting profile for invited user:", profileError)
         // Non-blocking, but log it
-      }
-    } else {
-      if (!finalOwnerId) {
-        return NextResponse.json({ error: "Dono da startup é obrigatório" }, { status: 400 })
-      }
-
-      // Check if the user already has a startup
-      const { data: existingStartup } = await serviceClient
-        .from("startups")
-        .select("id")
-        .eq("owner_id", finalOwnerId)
-        .maybeSingle()
-
-      if (existingStartup) {
-        return NextResponse.json({ error: "Este usuário já é dono de uma startup" }, { status: 400 })
       }
     }
 
