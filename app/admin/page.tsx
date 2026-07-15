@@ -13,7 +13,7 @@ import { AdminLeaders } from '@/components/admin/AdminLeaders'
 
 interface PendingItem {
     id: string
-    name: string
+    title: string
     created_at: string
 }
 

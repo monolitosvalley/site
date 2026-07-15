@@ -1,11 +1,11 @@
 import { StartupHighlightList } from '@/components/features/home/StartupHighlightList'
 import { HeroSection } from '@/components/features/home/HeroSection'
+import { AnimateOnScroll } from '@/components/features/home/AnimateOnScroll'
 import { Rocket, Users, Target, TrendingUp, Award } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import partnersData from '@/data/partners.json'
 import type { Partner } from '@/types/database'
-import { Partner } from '@/types/database'
 
 async function getStartups() {
   try {
@@ -86,7 +86,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <AnimateOnScroll className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {benefits.map((benefit, idx) => {
               const Icon = benefit.icon
               return (
@@ -102,7 +102,7 @@ export default async function HomePage() {
                 </div>
               )
             })}
-          </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
@@ -121,7 +121,9 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-            <StartupHighlightList startups={startups} />
+            <AnimateOnScroll>
+              <StartupHighlightList startups={startups} />
+            </AnimateOnScroll>
           </div>
         </section>
       )}
@@ -131,7 +133,7 @@ export default async function HomePage() {
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-bold text-stone-900 text-center mb-12">Nossos Parceiros</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
+            <AnimateOnScroll className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
               {partnersData.map((partner: Partner) => (
                 <a
                   key={partner.id}
@@ -153,7 +155,7 @@ export default async function HomePage() {
                   )}
                 </a>
               ))}
-            </div>
+            </AnimateOnScroll>
           </div>
         </section>
       )}
