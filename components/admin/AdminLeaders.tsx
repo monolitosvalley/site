@@ -68,7 +68,12 @@ export function AdminLeaders() {
             const res = await fetch('/api/admin/leaders')
             const data = await res.json()
             if (res.ok) {
-                setLeaders(data.data || [])
+                const sorted = (data.data || []).sort((a: any, b: any) => {
+                    const nameA = a.profiles?.full_name || ''
+                    const nameB = b.profiles?.full_name || ''
+                    return nameA.localeCompare(nameB)
+                })
+                setLeaders(sorted)
             } else {
                 toast.error(data.error || "Erro ao buscar lideranças")
             }

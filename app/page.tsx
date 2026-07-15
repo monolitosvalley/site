@@ -1,25 +1,11 @@
-import { EventCarousel } from '@/components/features/events/EventCarousel'
-import { StartupGrid } from '@/components/features/startups/StartupGrid'
+import { StartupHighlightList } from '@/components/features/home/StartupHighlightList'
 import { HeroSection } from '@/components/features/home/HeroSection'
-import { MagicLinkCTA } from '@/components/features/home/MagicLinkCTA'
-import { FAQ } from '@/components/features/home/FAQ'
-import { Testimonials } from '@/components/features/home/Testimonials'
 import { Rocket, Users, Target, TrendingUp, Award } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-
-async function getEvents() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events?limit=6`, {
-      cache: 'no-store',
-    })
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.data || []
-  } catch {
-    return []
-  }
-}
+import partnersData from '@/data/partners.json'
+import type { Partner } from '@/types/database'
+import { Partner } from '@/types/database'
 
 async function getStartups() {
   try {
@@ -34,25 +20,8 @@ async function getStartups() {
   }
 }
 
-async function getPartners() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/partners`, {
-      cache: 'no-store',
-    })
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.data || []
-  } catch {
-    return []
-  }
-}
-
 export default async function HomePage() {
-  const [events, startups, partners] = await Promise.all([
-    getEvents(),
-    getStartups(),
-    getPartners(),
-  ])
+  const startups = await getStartups()
 
   const stats = [
     { value: '50+', label: 'Startups Ativas' },
@@ -90,66 +59,6 @@ export default async function HomePage() {
       icon: Award,
       title: 'Oportunidades Reais',
       description: 'Vagas de emprego, parcerias estratégicas e possibilidades de investimento',
-    },
-  ]
-
-  const faqItems = [
-    {
-      id: 'faq-1',
-      question: 'Como faço para entrar na comunidade?',
-      answer: 'É simples! Basta fornecer seu e-mail e você receberá um link mágico para acessar a plataforma. Não precisa de senha, apenas clique no link que enviamos.',
-    },
-    {
-      id: 'faq-2',
-      question: 'Preciso ter uma startup para participar?',
-      answer: 'Não necessariamente! Aceitamos founders, investidores, mentores, desenvolvedores e profissionais que querem contribuir com o ecossistema de inovação.',
-    },
-    {
-      id: 'faq-3',
-      question: 'Qual o custo para participar?',
-      answer: 'A comunidade é gratuita! Você tem acesso a todos os eventos, networking e oportunidades. Algumas funcionalidades premium podem ter custo adicional.',
-    },
-    {
-      id: 'faq-4',
-      question: 'Quais são os benefícios imediatos?',
-      answer: 'Acesso a uma rede de 200+ empreendedores, eventos exclusivos, oportunidades de investimento, parcerias estratégicas e mentorias com especialistas.',
-    },
-    {
-      id: 'faq-5',
-      question: 'Como funciona o processo de seleção?',
-      answer: 'Não há processo de seleção rigoroso. Queremos incluir todos que estejam genuinamente interessados em inovação e empreendedorismo.',
-    },
-    {
-      id: 'faq-6',
-      question: 'Posso trazer minha equipe?',
-      answer: 'Sim! Encorajamos que você traga sua equipe. Quanto mais pessoas engajadas, melhor para toda a comunidade.',
-    },
-  ]
-
-  const testimonials = [
-    {
-      id: 'test-1',
-      name: 'Pedro Daniel',
-      role: 'Designer',
-      company: 'Dan Design Studio',
-      content: 'Uma Experiência única, fazer parte de tudo isso é algo tão lindo, se sentir parte de algo tão grandioso assim, faz meus olhos brilharem ❤️',
-      avatar: 'https://pedrodaniel.my.canva.site/_assets/media/1e769daa2e635bb6cf51369531f14706.jpg'
-    },
-    {
-      id: 'test-2',
-      name: 'Ana Paula Silva',
-      role: 'Fundadora',
-      company: 'EduConnect',
-      content: 'Encontrei aqui uma comunidade que realmente entende os desafios de empreender no interior. Os eventos são incríveis e as conexões são reais.',
-      avatar: 'https://ui-avatars.com/api/?name=Ana+Paula+Silva&background=d97706&color=fff&size=200'
-    },
-    {
-      id: 'test-3',
-      name: 'Rafael Costa',
-      role: 'Investidor',
-      company: 'Anjo Investidor',
-      content: 'A qualidade das startups que encontro na Monólitos Valley é excepcional. É um ecossistema que está crescendo rapidamente e gerando ótimas oportunidades.',
-      avatar: 'https://ui-avatars.com/api/?name=Rafael+Costa&background=d97706&color=fff&size=200'
     },
   ]
 
@@ -197,26 +106,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Events Section */}
-      {events.length > 0 && (
-        <section className="py-20 bg-stone-100">
-          <div className="container mx-auto px-4">
-            <div className="mb-12">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2">Próximos Eventos</h2>
-                  <p className="text-stone-600">Participe dos nossos eventos e expanda sua rede de contatos</p>
-                </div>
-                <Link href="/events" className="text-[#F2CB05] hover:text-[#d4b304] font-semibold text-sm border border-[#F2CB05] px-4 py-2 rounded-lg hover:bg-[#F2CB05]/10 transition-colors w-fit">
-                  Ver todos →
-                </Link>
-              </div>
-            </div>
-            <EventCarousel events={events} />
-          </div>
-        </section>
-      )}
-
       {/* Startups Section */}
       {startups.length > 0 && (
         <section className="py-20 bg-white">
@@ -232,28 +121,18 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-            <StartupGrid startups={startups} />
+            <StartupHighlightList startups={startups} />
           </div>
         </section>
       )}
 
-
-
-      {/* Testimonials Section */}
-      <Testimonials testimonials={testimonials} />
-
       {/* Partners Section */}
-      {(() => {
-        console.log('🔍 Partners array completo:', partners)
-        console.log('🔍 Total de parceiros:', partners.length)
-        return null
-      })()}
-      {partners.length > 0 && (
+      {partnersData.length > 0 && (
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-bold text-stone-900 text-center mb-12">Nossos Parceiros</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
-              {partners.map((partner: any) => (
+              {partnersData.map((partner: Partner) => (
                 <a
                   key={partner.id}
                   href={partner.website || '#'}
@@ -278,30 +157,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {/* FAQ Section */}
-      <FAQ items={faqItems} />
-
-      {/* CTA Final Section */}
-      {/* <section id="cta" className="relative overflow-hidden bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 py-20 md:py-28">
-        <div className="absolute inset-0 opacity-10">
-          <svg className="w-full h-full" viewBox="0 0 1200 300">
-            <defs>
-              <pattern id="grid-cta" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="1200" height="300" fill="url(#grid-cta)" />
-          </svg>
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <MagicLinkCTA
-            title="Pronto para transformar sua startup?"
-            description="Junte-se a dezenas de empreenderoes e ajude a construir o futuro do Sertão Central Cearense hoje mesmo."
-          />
-        </div>
-      </section> */}
     </div>
   )
 }

@@ -19,8 +19,6 @@ export function Navbar({ user }: NavbarProps) {
         { href: '/', label: 'Início' },
         { href: '/startups', label: 'Startups' },
         { href: '/events', label: 'Eventos' },
-        // { href: '/blog', label: 'Blog' },
-        // { href: '/opportunities', label: 'Oportunidades' },
         { href: '/leaders', label: 'Lideranças' },
     ]
 

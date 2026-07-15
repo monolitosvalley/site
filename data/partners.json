@@ -1,0 +1,35 @@
+[
+  {
+    "id": "partner-1",
+    "name": "Parceiro Exemplo 1",
+    "description": "Descrição do parceiro",
+    "image_url": null,
+    "logo_url": "https://via.placeholder.com/140x70?text=Parceiro+1",
+    "website": "https://example.com",
+    "category": "Tecnologia",
+    "approved": true,
+    "created_at": "2025-01-01T00:00:00Z"
+  },
+  {
+    "id": "partner-2",
+    "name": "Parceiro Exemplo 2",
+    "description": "Outra descrição",
+    "image_url": null,
+    "logo_url": "https://via.placeholder.com/140x70?text=Parceiro+2",
+    "website": "https://example.org",
+    "category": "Educação",
+    "approved": true,
+    "created_at": "2025-01-02T00:00:00Z"
+  },
+  {
+    "id": "partner-3",
+    "name": "Parceiro Exemplo 3",
+    "description": null,
+    "image_url": null,
+    "logo_url": "https://via.placeholder.com/140x70?text=Parceiro+3",
+    "website": null,
+    "category": "Inovação",
+    "approved": true,
+    "created_at": "2025-01-03T00:00:00Z"
+  }
+]

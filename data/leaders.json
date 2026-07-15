@@ -1,0 +1,58 @@
+[
+  {
+    "id": "leader-1",
+    "full_name": "Pedro Daniel",
+    "role_title": "Founder & CEO",
+    "startup_name": "Dan Design Studio",
+    "linkedin_url": "https://linkedin.com/in/pedrodaniel",
+    "instagram_url": "https://instagram.com/pedrodaniel",
+    "photo_url": null,
+    "profiles": {
+      "full_name": "Pedro Daniel",
+      "email": "pedro@example.com",
+      "avatar_url": "https://ui-avatars.com/api/?name=Pedro+Daniel&background=d97706&color=fff&size=200"
+    }
+  },
+  {
+    "id": "leader-2",
+    "full_name": "Ana Paula Silva",
+    "role_title": "Fundadora",
+    "startup_name": "EduConnect",
+    "linkedin_url": "https://linkedin.com/in/anapaulasilva",
+    "instagram_url": null,
+    "photo_url": null,
+    "profiles": {
+      "full_name": "Ana Paula Silva",
+      "email": "ana@example.com",
+      "avatar_url": "https://ui-avatars.com/api/?name=Ana+Paula+Silva&background=d97706&color=fff&size=200"
+    }
+  },
+  {
+    "id": "leader-3",
+    "full_name": "Rafael Costa",
+    "role_title": "Investidor Anjo",
+    "startup_name": null,
+    "linkedin_url": "https://linkedin.com/in/rafaelcosta",
+    "instagram_url": null,
+    "photo_url": null,
+    "profiles": {
+      "full_name": "Rafael Costa",
+      "email": "rafael@example.com",
+      "avatar_url": "https://ui-avatars.com/api/?name=Rafael+Costa&background=d97706&color=fff&size=200"
+    }
+  },
+  {
+    "id": "leader-4",
+    "full_name": "Mariana Oliveira",
+    "role_title": "Mentora de Startups",
+    "startup_name": "TechForge",
+    "linkedin_url": "https://linkedin.com/in/marianaoliveira",
+    "instagram_url": "https://instagram.com/marianaoliveira",
+    "photo_url": null,
+    "profiles": {
+      "full_name": "Mariana Oliveira",
+      "email": "mariana@example.com",
+      "avatar_url": "https://ui-avatars.com/api/?name=Mariana+Oliveira&background=d97706&color=fff&size=200"
+    }
+  }
+]
