@@ -69,7 +69,7 @@ export default function PrivacyPage() {
                         <div className="space-y-4 text-stone-700">
                             <ul className="list-disc pl-6 space-y-2">
                                 <li><strong>Prestação de Serviços:</strong> Criar e gerenciar sua conta, exibir perfil da startup</li>
-                                <li><strong>Comunicação:</strong> Enviar notificações sobre eventos, oportunidades e atualizações via Brevo SMTP</li>
+                                <li><strong>Comunicação:</strong> Enviar notificações sobre encontros, oportunidades e atualizações via Brevo SMTP</li>
                                 <li><strong>Melhorias:</strong> Analisar uso da plataforma para melhorar funcionalidades</li>
                                 <li><strong>Segurança:</strong> Prevenir fraudes e proteger a plataforma</li>
                                 <li><strong>Marketing:</strong> Enviar newsletters e conteúdo relevante (com seu consentimento)</li>

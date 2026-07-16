@@ -17,28 +17,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9
     },
     {
-      url: `${baseUrl}/eventos`,
+      url: `${baseUrl}/agenda`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${baseUrl}/lideres`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8
-    },
-    {
-      url: `${baseUrl}/opportunities`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8
-    },
-    {
-      url: `${baseUrl}/store`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7
     }
   ]
 }

@@ -43,7 +43,7 @@ export default async function HomePage() {
     {
       icon: Users,
       title: 'Comunidade Ativa',
-      description: 'Faça parte de uma comunidade vibrante com eventos, workshops e oportunidades de colaboração',
+      description: 'Faça parte de uma comunidade vibrante com workshops, networking e oportunidades de colaboração',
     },
     {
       icon: Target,

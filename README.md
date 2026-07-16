@@ -124,7 +124,7 @@ monolitos-valley-portal/
 │   ├── (public)/                 # Rotas públicas
 │   │   ├── negocios/
 │   │   │   └── [slug]/
-│   │   ├── eventos/
+│   │   ├── agenda/
 │   │   └── lideres/
 │   ├── admin/                    # Painel administrativo
 │   ├── profile/                  # Área do usuário

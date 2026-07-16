@@ -18,7 +18,7 @@ export function Navbar({ user }: NavbarProps) {
     const navLinks = [
         { href: '/', label: 'Início' },
         { href: '/negocios', label: 'Negócios' },
-        { href: '/eventos', label: 'Eventos' },
+        { href: '/agenda', label: 'Agenda' },
         { href: '/lideres', label: 'Lideranças' },
     ]
 

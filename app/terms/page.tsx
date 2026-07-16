@@ -63,7 +63,7 @@ export default function TermsPage() {
                             <p><strong>Nossos serviços incluem:</strong></p>
                             <ul className="list-disc pl-6 space-y-1">
                                 <li>Cadastro e perfil de startups</li>
-                                <li>Divulgação de eventos e oportunidades</li>
+                                <li>Divulgação de encontros e oportunidades</li>
                                 <li>Networking e conexões</li>
                                 <li>Acesso a recursos e conteúdos</li>
                                 <li>Visibilidade para investidores e parceiros</li>
