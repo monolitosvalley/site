@@ -87,15 +87,14 @@ export default function LoginPage() {
 
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
-            <AnimateOnScroll>
-                <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle>Bem-vindx!</CardTitle>
+            <Card className="w-full max-w-md shadow-lg">
+                <CardHeader className="pb-4">
+                    <CardTitle className="text-2xl">Bem-vindx!</CardTitle>
                     <CardDescription>
                         Faça login para acessar sua conta e gerenciar seu perfil
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-6">
                     <Tabs defaultValue="password" className="w-full">
                         <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="password">Email e Senha</TabsTrigger>
@@ -175,7 +174,6 @@ export default function LoginPage() {
                     )}
                 </CardContent>
             </Card>
-            </AnimateOnScroll>
         </div>
     )
 }
