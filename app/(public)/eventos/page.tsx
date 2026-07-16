@@ -2,9 +2,18 @@
 
 import { AnimateOnScroll } from '@/components/features/home/AnimateOnScroll'
 
-export default function EventsPage() {
-    const calendarUrl = 'https://calendar.google.com/calendar/u/0?cid=YzRkMDQ2YTY3ODkyMWQxMWFjYzEzMjM1Yjk0NzIzNzE3NTEyYWIxMDVlNmI3YTY5MWVmNzAwNDIyNmI0Y2NmOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t'
+const calendarIframe = (
+    <iframe
+        src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FFortaleza&showPrint=0&src=bW9ub2xpdG9zdmFsbGV5QGdtYWlsLmNvbQ&src=YzRkMDQ2YTY3ODkyMWQxMWFjYzEzMjM1Yjk0NzIzNzE3NTEyYWIxMDVlNmI3YTY5MWVmNzAwNDIyNmI0Y2NmOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=cHQtYnIuYnJhemlsaWFuI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%23039be5&color=%23e67c73&color=%230b8043"
+        style={{ border: 'solid 1px #777' }}
+        width="100%"
+        height="600"
+        frameBorder="0"
+        scrolling="no"
+    />
+)
 
+export default function EventsPage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <AnimateOnScroll className="mb-8">
@@ -16,16 +25,7 @@ export default function EventsPage() {
 
             <AnimateOnScroll>
                 <div className="relative w-full overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
-                    <div className="relative" style={{ paddingBottom: '75%' }}>
-                        <iframe
-                            src={calendarUrl}
-                            className="absolute inset-0 h-full w-full"
-                            style={{ border: 0 }}
-                            title="Google Calendar - Monólitos Valley"
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                        />
-                    </div>
+                    {calendarIframe}
                 </div>
             </AnimateOnScroll>
 
