@@ -47,10 +47,9 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
-# Brevo (opcional - para emails customizados)
-BREVO_API_KEY=your_brevo_api_key
-BREVO_SENDER_EMAIL=noreply@monolitosvalley.com
-BREVO_SENDER_NAME=Monólitos Valley
+# Site
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_WHATSAPP_GROUP_URL=https://chat.whatsapp.com/your-group-link
 ```
 
 4. Execute as migrations do Supabase:
@@ -123,21 +122,20 @@ monolitos-valley-portal/
 │   │   ├── forgot-password/
 │   │   └── reset-password/
 │   ├── (public)/                 # Rotas públicas
-│   │   ├── blog/
-│   │   ├── events/
-│   │   ├── opportunities/
-│   │   ├── startups/
-│   │   └── store/
+│   │   ├── negocios/
+│   │   │   └── [slug]/
+│   │   ├── eventos/
+│   │   └── lideres/
+│   ├── admin/                    # Painel administrativo
 │   ├── profile/                  # Área do usuário
 │   ├── api/                      # API Routes
 │   └── auth/callback/            # Callback de autenticação
 ├── components/                   # Componentes React
 │   ├── features/                 # Componentes por feature
-│   │   ├── blog/
-│   │   ├── events/
-│   │   ├── opportunities/
-│   │   ├── profile/
-│   │   └── startups/
+│   │   ├── home/
+│   │   ├── leaders/
+│   │   ├── startups/
+│   │   └── admin/
 │   ├── layout/                   # Componentes de layout
 │   └── ui/                       # Componentes shadcn/ui
 ├── lib/                          # Utilitários e configurações
@@ -145,6 +143,7 @@ monolitos-valley-portal/
 │   ├── utils/                    # Funções utilitárias
 │   └── validations/              # Schemas Zod
 ├── types/                        # Tipos TypeScript
+├── data/                         # Dados estáticos JSON
 ├── supabase/                     # Migrations e configurações
 │   └── migrations/
 └── public/                       # Arquivos estáticos
@@ -159,9 +158,9 @@ O projeto suporta dois métodos de autenticação:
 
 ### Fluxos de autenticação:
 
-- **Login**: `/auth/login` → autenticação → `/profile`
-- **Magic Link**: `/auth/login` → email → `/auth/callback` → `/profile`
-- **Recuperação de senha**: `/auth/forgot-password` → email → `/auth/reset-password` → `/profile`
+- **Login**: `/login` → autenticação → `/profile`
+- **Magic Link**: `/login` → email → `/auth/callback` → `/profile`
+- **Recuperação de senha**: `/forgot-password` → email → `/reset-password` → `/profile`
 
 ## 👤 Área do Usuário
 
@@ -178,20 +177,17 @@ A área de perfil (`/profile`) possui 4 tabs:
 
 - `profiles`: Perfis dos usuários
 - `startups`: Startups cadastradas
-- `events`: Eventos da comunidade
-- `blog_posts`: Posts do blog
-- `opportunities`: Oportunidades (investimentos, editais, vagas, etc)
+- `team_members`: Membros do time das startups
 - `partners`: Parceiros da comunidade
-- `store_products`: Produtos da lojinha
+- `community_leaders`: Lideranças da comunidade
 
 ### Storage Buckets:
 
 - `avatars`: Fotos de perfil
 - `logos`: Logos de startups
+- `team-members`: Fotos dos membros do time
 - `pitch-decks`: Pitch decks (público)
-- `events`: Imagens de eventos
-- `blog`: Imagens de posts
-- `products`: Imagens de produtos
+- `partners`: Logos dos parceiros
 
 ## 🎨 Componentes UI
 
@@ -205,16 +201,15 @@ O projeto usa shadcn/ui com os seguintes componentes:
 
 ## 🚀 Deploy
 
-### Vercel (Recomendado)
+### Vercel
 
-1. Faça push do código para o GitHub
-2. Importe o projeto no Vercel
-3. Configure as variáveis de ambiente
-4. Deploy automático!
+1. Conecte o repositório GitHub na Vercel
+2. Configure as variáveis de ambiente
+3. Deploy automático a cada push na `main`
 
 ### Variáveis de ambiente para produção:
 
-Adicione as mesmas variáveis do `.env.local` no painel do Vercel.
+Adicione as mesmas variáveis do `.env.local` no painel da Vercel.
 
 Não esqueça de adicionar as URLs de produção no Supabase:
 

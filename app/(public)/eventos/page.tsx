@@ -20,21 +20,22 @@ export default function EventsPage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <AnimateOnScroll className="mb-8">
-                <h1 className="text-4xl font-bold mb-2">Agenda</h1>
-                <p className="text-muted-foreground">
-                    Eventos, meetups e oportunidades da comunidade Monólitos Valley
-                </p>
-            </AnimateOnScroll>
-
-            <AnimateOnScroll className="mb-4">
-                <Button
-                    asChild
-                    className="bg-[#F2CB05] hover:bg-[#d4b304] text-stone-900 font-semibold"
-                >
-                    <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer">
-                        Adicionar ao Google Agenda
-                    </a>
-                </Button>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 className="text-4xl font-bold mb-2">Agenda</h1>
+                        <p className="text-muted-foreground">
+                            Eventos, meetups e oportunidades da comunidade Monólitos Valley
+                        </p>
+                    </div>
+                    <Button
+                        asChild
+                        className="bg-[#F2CB05] hover:bg-[#d4b304] text-stone-900 font-semibold w-fit"
+                    >
+                        <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer">
+                            Adicionar ao Google Agenda
+                        </a>
+                    </Button>
+                </div>
             </AnimateOnScroll>
 
             <AnimateOnScroll>

@@ -35,7 +35,8 @@ Este documento define as regras básicas para colaborar no repositório `monolit
 - Imagens devem ter direitos de uso.
 
 ### 6. Estrutura do projeto
-- Páginas públicas: `app/(public)/`
+- Páginas públicas: `app/(public)/` (`negocios/`, `eventos/`, `lideres/`)
+- Admin: `app/admin/`
 - API routes: `app/api/`
 - Componentes reutilizáveis: `components/`
 - Dados estáticos: `data/`

@@ -9,7 +9,7 @@ import Link from 'next/link'
 interface TeamMember {
     id: string
     full_name: string | null
-    avatar_url: string | null
+    photo_url: string | null
     bio: string | null
     role?: string
     linkedin?: string
@@ -51,9 +51,9 @@ export function TeamMembers({ members, title = 'Time' }: TeamMembersProps) {
                     >
                         {/* Avatar */}
                         <div className="flex items-start gap-3 mb-3">
-                            {member.avatar_url ? (
+                            {member.photo_url ? (
                                 <Image
-                                    src={member.avatar_url}
+                                    src={member.photo_url}
                                     alt={member.full_name || 'Membro'}
                                     width={48}
                                     height={48}
