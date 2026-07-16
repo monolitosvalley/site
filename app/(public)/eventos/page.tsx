@@ -1,6 +1,7 @@
 'use client'
 
 import { AnimateOnScroll } from '@/components/features/home/AnimateOnScroll'
+import { Button } from '@/components/ui/button'
 
 const calendarIframe = (
     <iframe
@@ -13,6 +14,8 @@ const calendarIframe = (
     />
 )
 
+const googleCalendarUrl = 'https://calendar.google.com/calendar/u/0/r?cid=c4d046a678921d11acc13235b94723717512ab105e6b7a691ef7004226b4ccf8@group.calendar.google.com&cid=pt-br.brazilian%23holiday@group.v.calendar.google.com'
+
 export default function EventsPage() {
     return (
         <div className="container mx-auto px-4 py-8">
@@ -21,6 +24,17 @@ export default function EventsPage() {
                 <p className="text-muted-foreground">
                     Eventos, meetups e oportunidades da comunidade Monólitos Valley
                 </p>
+            </AnimateOnScroll>
+
+            <AnimateOnScroll className="mb-4">
+                <Button
+                    asChild
+                    className="bg-[#F2CB05] hover:bg-[#d4b304] text-stone-900 font-semibold"
+                >
+                    <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer">
+                        Adicionar ao Google Agenda
+                    </a>
+                </Button>
             </AnimateOnScroll>
 
             <AnimateOnScroll>
